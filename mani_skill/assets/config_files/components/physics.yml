@@ -1,0 +1,15 @@
+simulation_frequency: 500
+gravity: [0, 0, -9.81]
+default_dynamic_friction: 0.5
+default_static_friction: 0.5
+default_restitution: 0.1
+bounce_threshold: 2
+sleep_threshold: 0.005
+contact_offset: 0.02
+solver_iterations: 25
+solver_velocity_iterations: 2
+enable_enhanced_determinism: false
+enable_pcm: false
+enable_ccd: false
+enable_friction_every_iteration: true
+enable_adaptive_force: false

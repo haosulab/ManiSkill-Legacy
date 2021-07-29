@@ -1,0 +1,60 @@
+physics:
+  _include: "components/physics.yml"
+  _override:
+    solver_iterations: 15
+render:
+  _include: "components/default_rendering.yml"
+  $cameras_height: 2
+  _override:
+    cameras:
+    - name: "world"
+      position: [0, 0, 4]
+      rotation: [0.70710678, 0.        , 0.70710678, 0.        ] # face down
+      _include: "components/default_camera.yml"
+    - name: "object"
+      parent: "chair"
+      position: [1.5, 0, 1.5]
+      rotation: [ 5.65713056e-17, -3.82683432e-01, -2.34326020e-17,  9.23879533e-01] # transforms3d.euler.euler2quat(np.pi, -np.pi/4, 0, 'szyx')
+      _include: "components/default_camera.yml"
+    - _include: "components/six_cameras_on_robot.yml"
+    
+layout:
+  surface_materials:
+    - name: "object_material"
+      static_friction: 0.1
+      dynamic_friction: 0.1
+      restitution: 0
+  rigid_bodies:
+    - name: "ground"
+      parts:
+        - type: "ground"
+          altitude: 0
+          collision: true
+          visual: true
+          surface_material: "object_material"
+          render_material: "ground"
+  articulations:
+    - name: "chair"
+      fix_base: False
+      surface_material: "object_material"
+      density: 200
+      scale: 0.8
+      _variants:
+        type: "options"
+        global_id: "partnet_mobility_id"
+        options:
+          _include: "chair_models.yml"
+agent:
+  _include: "robots/mobile_a2_dual_arm.yml"
+  _override:
+    initial_qpos: [
+      0, 0, 0,
+      0.9,
+      0, 0, 0, -1.5, 0, 3, 0.78,
+      0.02, 0.02,
+      0, 0, 0, -1.5, 0, 3, 0.78,
+      0.02, 0.02,
+    ]
+
+custom:
+  target_radius: 0.15 # unit is meter

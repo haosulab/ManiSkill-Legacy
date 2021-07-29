@@ -1,0 +1,17 @@
+name: "robot"
+sub_cameras:
+  - name: "robot_1"
+    parent: "robot"
+    position: [0, 0, $cameras_height]
+    rotation: [0.9238795, 0, 0.3826834, 0] # transforms3d.euler.euler2quat(-np.pi/3*k, np.pi/4, 0, 'rzyx')
+    _include: "default_camera.yml"
+  - name: "robot_2"
+    parent: "robot"
+    position: [0, 0, $cameras_height]
+    rotation: [ 0.46193977,  0.33141357,  0.19134172, -0.80010315]
+    _include: "default_camera.yml"
+  - name: "robot_3"
+    parent: "robot"
+    position: [0, 0, $cameras_height]
+    rotation: [-0.46193977,  0.33141357, -0.19134172, -0.80010315]
+    _include: "default_camera.yml"

@@ -1,0 +1,154 @@
+agent_class: "mani_skill.agent.agent.MobileA2DualArmAgent"
+name: "mobile_a2_dual_arm"
+urdf_file: "../../robot/sciurus/A2.urdf"
+control_frequency: 100
+all_joints: [
+  "root_x_axis_joint", "root_y_axis_joint", "root_z_rotation_joint",
+  "linear_actuator_height",
+  "right_panda_joint1",
+  "right_panda_joint2",
+  "right_panda_joint3",
+  "right_panda_joint4",
+  "right_panda_joint5",
+  "right_panda_joint6",
+  "right_panda_joint7",
+  "right_panda_finger_joint1",
+  "right_panda_finger_joint2",
+  "left_panda_joint1",
+  "left_panda_joint2",
+  "left_panda_joint3",
+  "left_panda_joint4",
+  "left_panda_joint5",
+  "left_panda_joint6",
+  "left_panda_joint7",
+  "left_panda_finger_joint1",
+  "left_panda_finger_joint2",
+]
+controllable_joints: [
+  'root_x_axis_joint', 'root_y_axis_joint', 'root_z_rotation_joint',
+  'linear_actuator_height',
+  "right_panda_joint1",
+  "right_panda_joint2",
+  "right_panda_joint3",
+  "right_panda_joint4",
+  "right_panda_joint5",
+  "right_panda_joint6",
+  "right_panda_joint7",
+  "right_panda_finger_joint1",
+  "right_panda_finger_joint2",
+  "left_panda_joint1",
+  "left_panda_joint2",
+  "left_panda_joint3",
+  "left_panda_joint4",
+  "left_panda_joint5",
+  "left_panda_joint6",
+  "left_panda_joint7",
+  "left_panda_finger_joint1",
+  "left_panda_finger_joint2",
+]
+initial_qpos: [
+  0, 0, 0,
+  0,
+  0, 0, 0, -1.5, 0, 3, 0.78,
+  0.02, 0.02,
+  0, 0, 0, -1.5, 0, 3, 0.78,
+  0.02, 0.02,
+]
+base_position: [0, 0, 0]
+base_rotation: [1, 0, 0, 0]
+scale: 1
+balance_passive_force: true
+fix_base: true
+surface_materials:
+  - name: "gripper"
+    static_friction: 2
+    dynamic_friction: 2
+    restitution: 0   
+links:
+  - name: "left_panda_leftfinger"
+    surface_material: "gripper"
+    patch_radius: 0.1
+    min_patch_radius: 0.1
+  - name: "left_panda_rightfinger"
+    surface_material: "gripper"
+    patch_radius: 0.1
+    min_patch_radius: 0.1
+  - name: "right_panda_leftfinger"
+    surface_material: "gripper"
+    patch_radius: 0.1
+    min_patch_radius: 0.1
+  - name: "right_panda_rightfinger"
+    surface_material: "gripper"
+    patch_radius: 0.1
+    min_patch_radius: 0.1
+joints:
+  - name: "root_x_axis_joint"
+    stiffness: 0
+    damping: 1000
+    friction: 0.1
+    action_type: "velocity"
+    action_range: [-0.5, 0.5]
+    velocity_filter:
+      cutoff_frequency: 40
+  - name: "root_y_axis_joint"
+    stiffness: 0
+    damping: 1000
+    friction: 0.1
+    action_type: "velocity"
+    action_range: [-0.5, 0.5]
+    velocity_filter:
+      cutoff_frequency: 40
+  - name: "root_z_rotation_joint"
+    stiffness: 0
+    damping: 1000
+    friction: 0.1
+    action_type: "velocity"
+    action_range: [-3.14, 3.14]
+    velocity_filter:
+      cutoff_frequency: 40
+  - name: "linear_actuator_height"
+    stiffness: 0
+    damping: 1000
+    friction: 0.1
+    action_type: "velocity"
+    action_range: [-0.5, 0.5]
+    velocity_filter:
+      cutoff_frequency: 40
+
+  - name: "right_panda_joint1"
+    _include: "default_arm_params.yml"
+  - name: "right_panda_joint2"
+    _include: "default_arm_params.yml"
+  - name: "right_panda_joint3"
+    _include: "default_arm_params.yml"
+  - name: "right_panda_joint4"
+    _include: "default_arm_params.yml"
+  - name: "right_panda_joint5"
+    _include: "default_arm_params.yml"
+  - name: "right_panda_joint6"
+    _include: "default_arm_params.yml"
+  - name: "right_panda_joint7"
+    _include: "default_arm_params.yml"
+  - name: "left_panda_joint1"
+    _include: "default_arm_params.yml"
+  - name: "left_panda_joint2"
+    _include: "default_arm_params.yml"
+  - name: "left_panda_joint3"
+    _include: "default_arm_params.yml"
+  - name: "left_panda_joint4"
+    _include: "default_arm_params.yml"
+  - name: "left_panda_joint5"
+    _include: "default_arm_params.yml"
+  - name: "left_panda_joint6"
+    _include: "default_arm_params.yml"
+  - name: "left_panda_joint7"
+    _include: "default_arm_params.yml"
+
+  - name: "right_panda_finger_joint1"
+    _include: "default_finger_params.yml"
+  - name: "right_panda_finger_joint2"
+    _include: "default_finger_params.yml"
+  - name: "left_panda_finger_joint1"
+    _include: "default_finger_params.yml"
+  - name: "left_panda_finger_joint2"
+    _include: "default_finger_params.yml"

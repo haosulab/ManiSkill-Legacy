@@ -1,0 +1,5 @@
+fovy: 1.04712 # pi/6
+near: 0.1
+far: 10
+width: 400
+height: 160

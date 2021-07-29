@@ -1,0 +1,50 @@
+# compilation and distribution
+__pycache__
+_ext
+*.pyc
+*.so
+build/
+dist/
+*.egg-info/
+
+# ipython/jupyter notebooks
+*.ipynb
+**/.ipynb_checkpoints/
+
+# Editor temporaries
+*.swn
+*.swo
+*.swp
+*~
+
+# Pycharm editor settings
+.idea
+
+# VSCode editor settings
+.vscode
+
+# project dirs
+/data
+/outputs
+/tmp
+/eval_results
+/debug
+/sapien_package
+/figures
+*.csv
+imgui.ini
+*_try.py
+/partnet-mobility-dataset
+error_log.txt
+error.log
+mani_skill/eval/debug_solution.py
+test.png
+/figures
+# *_train.yml
+# *_val.yml
+# *_test.yml
+environment_simple.yml
+debug*
+
+# MacOS
+*.DS_Store

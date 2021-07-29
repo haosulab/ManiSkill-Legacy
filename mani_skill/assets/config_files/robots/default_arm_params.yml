@@ -1,0 +1,7 @@
+stiffness: 0
+damping: 100
+friction: 0.1
+action_type: "velocity"
+action_range: [-3.14, 3.14]
+velocity_filter:
+  cutoff_frequency: 40

@@ -1,0 +1,55 @@
+physics:
+  _include: "components/physics.yml"
+render:
+  _include: "components/default_rendering.yml"
+  $cameras_height: 1.5
+  _override:
+    cameras:
+    - name: "world"
+      position: [0, 0, 4]
+      rotation: [0.70710678, 0.        , 0.70710678, 0.        ] # face down
+      _include: "components/default_camera.yml"
+    - _include: "components/six_cameras_on_robot.yml"
+layout:
+  surface_materials:
+    - name: "object_material"
+      static_friction: 0.5
+      dynamic_friction: 0.5
+      restitution: 0
+  rigid_bodies:
+    - name: "ground"
+      parts:
+        - type: "ground"
+          altitude: 0
+          collision: true
+          visual: true
+          surface_material: "object_material"
+          render_material: "ground"
+  articulations:
+    - name: "bucket"
+      fix_base: false
+      position: [0,0,2]
+      rotation: [1,0,0,0]
+      surface_material: "object_material"
+      density: 1000
+      multiple_collisions: true
+      _variants:
+        type: "options"
+        global_id: "partnet_mobility_id"
+        options:
+          _include: "bucket_models.yml"
+
+agent:
+  _include: "robots/mobile_a2_dual_arm.yml"
+  _override:
+    initial_qpos: [
+      0, 0, 0,
+      0.5,
+      0, 0, 0, -1.5, 0, 3, 0.78,
+      0.02, 0.02,
+      0, 0, 0, -1.5, 0, 3, 0.78,
+      0.02, 0.02,
+    ]
+    
+custom:
+  target_radius: 0.3 # unit is meter

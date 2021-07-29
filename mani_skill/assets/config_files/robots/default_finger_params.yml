@@ -1,0 +1,12 @@
+stiffness: 0
+damping: 1
+friction: 0.1
+action_type: "position"
+action_range: [-100, 100]
+velocity_filter:
+  cutoff_frequency: 40
+velocity_pid:
+  kp: 1
+  ki: 0
+  kd: 0.01
+  limit: [-100, 100]
