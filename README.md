@@ -25,6 +25,7 @@ This README describes how to install ManiSkill, how to run a basic example, and 
     - [Viewer Tutorial](#viewer-tutorial)
     - [Utilize Demonstrations](#utilize-demonstrations)
     - [Baselines](#baselines)
+    - [FAQ](#faq)
   - [Environment Details](#environment-details)
     - [Tasks](#tasks)
     - [Robots and Actions](#robots-and-actions)
@@ -175,6 +176,9 @@ In our challenge, ManiSkill (this repo) contains the environments you need to wo
 and [ManiSkill-Learn](https://github.com/haosulab/ManiSkill-Learn) framework contains the baselines provided by us. 
 ManiSkill is a required component for this challenge, but ManiSkill-Learn is not required.
 However, we encourage you to use ManiSkill-Learn to develop your algorithms and it will help you start quicker and easier.
+
+### FAQ
+FAQ page is hosted [here](https://github.com/haosulab/ManiSkill/wiki).
 
 ## Environment Details
 This section describes some details of the environments in the
