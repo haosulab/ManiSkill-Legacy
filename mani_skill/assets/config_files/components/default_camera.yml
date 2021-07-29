@@ -1,4 +1,4 @@
-fovy: 1.04712 # pi/6
+fovy: 1.04712 # pi/3
 near: 0.1
 far: 10
 width: 400
