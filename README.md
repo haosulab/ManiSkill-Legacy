@@ -4,7 +4,7 @@
 
 SAPIEN Manipulation Skill Benchmark (abbreviated as **ManiSkill**, pronounced as "Many Skill") is a large-scale learning-from-demonstrations benchmark for articulated object manipulation with visual input (point cloud and image). ManiSkill supports object-level variations by utilizing a rich and diverse set of articulated objects, and each task is carefully designed for learning manipulations on a single category of objects. We equip ManiSkill with high-quality demonstrations to facilitate learning-from-demonstrations approaches and perform evaluations on common baseline algorithms. We believe ManiSkill can encourage the robot learning community to explore more on learning generalizable object manipulation skills.
 
-Currently, ManiSkill has released 4 different tasks: OpenCabinetDoor, OpenCabinetDrawer, PushChair and MoveBucket
+Currently, ManiSkill has released 4 different tasks: OpenCabinetDoor, OpenCabinetDrawer, PushChair, and MoveBucket.
 
 [Click here for our website and paper.](https://sapien.ucsd.edu/challenges/maniskill2021)
 
