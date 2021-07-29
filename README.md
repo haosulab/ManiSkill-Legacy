@@ -333,7 +333,7 @@ The full list of available environments can be found in `available_environments.
 ## Advanced Usage
 ### Custom Split
 If you want to select some objects to be used in a task (e.g., create training/validation split), we provide an example for you.
-Let us take PushChair task as an example, you can create such a file (`mani_skill/assets/config_files/chair_models_custom_split_example.yml`) to specify the objects you want to use. And modify [these lines](https://github.com/haosulab/ManiSkill/mani_skill/env/__init__.py#L140-L149) accordingly to register new environments.
+Let us take PushChair task as an example, you can create such a file (`mani_skill/assets/config_files/chair_models_custom_split_example.yml`) to specify the objects you want to use. And modify [these lines](https://github.com/haosulab/ManiSkill/blob/main/mani_skill/env/__init__.py#L110-L118) accordingly to register new environments.
 
 ### Visualization inside Docker
 If you want to run the environment in a Docker while still visualizing it, it is
