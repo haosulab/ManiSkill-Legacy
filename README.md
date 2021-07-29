@@ -60,8 +60,8 @@ Every timestep you are given an observation (e.g., point cloud / image) from the
 
 Explanations about the above terminologies: 
 - Observation: a description about the current state of the simulated environment, which may not contain complete information. Observation is usually represented by several arrays (e.g., point clouds, images, vectors).
-- Action: how agent interact with the environment, which is usually represented by a vector.
-- Reward: used to define the goal of the agent, which is usually represented by a scalar value.
+- Action: how an agent interacts with the environment, which is usually represented by a vector.
+- Reward: used to define the goal of an agent, which is usually represented by a scalar value.
 
 ## What Can I Do with ManiSkill? (TL;DR)
 
