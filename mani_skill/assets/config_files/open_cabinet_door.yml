@@ -9,7 +9,7 @@ render:
       position: [-1.5, 0, 1.5]
       rotation: [0.9238795, 0, 0.3826834, 0]
       _include: "components/default_camera.yml"
-    - _include: "components/six_cameras_on_robot.yml"
+    - _include: "components/cameras_on_robot.yml"
 layout:
   surface_materials:
     - name: "object_material"

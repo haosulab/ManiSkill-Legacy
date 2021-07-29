@@ -16,7 +16,7 @@ render:
       position: [1.5, 0, 1.5]
       rotation: [ 5.65713056e-17, -3.82683432e-01, -2.34326020e-17,  9.23879533e-01] # transforms3d.euler.euler2quat(np.pi, -np.pi/4, 0, 'szyx')
       _include: "components/default_camera.yml"
-    - _include: "components/six_cameras_on_robot.yml"
+    - _include: "components/cameras_on_robot.yml"
     
 layout:
   surface_materials:
