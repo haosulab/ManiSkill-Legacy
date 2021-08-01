@@ -24,7 +24,7 @@ This README describes how to install ManiSkill, how to run a basic example, and 
     - [Basic Example](#basic-example)
     - [Viewer Tutorial](#viewer-tutorial)
     - [Utilize Demonstrations](#utilize-demonstrations)
-    - [Baselines](#baselines)
+    - [Baselines and Training Framework](#baselines-and-training-framework)
     - [FAQ](#faq)
   - [Environment Details](#environment-details)
     - [Tasks](#tasks)
@@ -168,7 +168,7 @@ You can find a more detailed tutorial
 We provide demonstration datasets for each task to facilitate learning-from-demonstrations approaches.
 Please refer to the documentation [here](https://github.com/haosulab/ManiSkill-Learn#demonstrations).
 
-### Baselines
+### Baselines and Training Framework
 We provide a high-quality framework for training agents on the ManiSkill Benchmark at [ManiSkill-Learn](https://github.com/haosulab/ManiSkill-Learn). The framework supports various imitation learning and offline-RL baselines implemented using point-cloud based network architectures. Try it out!
 
 In our challenge, ManiSkill (this repo) contains the environments you need to work on, 
