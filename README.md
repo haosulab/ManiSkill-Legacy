@@ -2,7 +2,7 @@
 
 ![](readme_files/teaser.jpg)
 
-SAPIEN Manipulation Skill Benchmark (abbreviated as **ManiSkill**, pronounced as "Many Skill") is a large-scale learning-from-demonstrations benchmark for articulated object manipulation with visual input (point cloud and image). ManiSkill supports object-level variations by utilizing a rich and diverse set of articulated objects, and each task is carefully designed for learning manipulations on a single category of objects. We equip ManiSkill with high-quality demonstrations to facilitate learning-from-demonstrations approaches and perform evaluations on common baseline algorithms. We believe ManiSkill can encourage the robot learning community to explore more on learning generalizable object manipulation skills.
+Learning generalizable manipulation skills is central for robots to achieve task automation in real-life environments with endless scene and object variations. We propose SAPIEN Manipulation Skill Benchmark (abbreviated as **ManiSkill**, pronounced as "Many Skill"), a large-scale learning-from-demonstrations benchmark for articulated object manipulation with visual input (point cloud and image). ManiSkill supports object-level variations by utilizing a rich and diverse set of articulated objects, and each task is carefully designed for learning manipulations on a single category of objects. We equip ManiSkill with high-quality demonstrations to facilitate learning-from-demonstrations approaches and perform evaluations on common baseline algorithms. We believe ManiSkill can encourage the robot learning community to explore more on learning generalizable object manipulation skills.
 
 Currently, ManiSkill has released 4 different tasks: OpenCabinetDoor, OpenCabinetDrawer, PushChair, and MoveBucket.
 
@@ -169,8 +169,7 @@ We provide demonstration datasets for each task to facilitate learning-from-demo
 Please refer to the documentation [here](https://github.com/haosulab/ManiSkill-Learn#demonstrations).
 
 ### Baselines
-We provide imitation learning and inverse RL baselines, as well as relevant development kits 
-in [ManiSkill-Learn](https://github.com/haosulab/ManiSkill-Learn) framework. Try it out!
+We provide a high-quality framework for training agents on the ManiSkill Benchmark at [ManiSkill-Learn](https://github.com/haosulab/ManiSkill-Learn). The framework supports various imitation learning and offline-RL baselines implemented using point-cloud based network architectures. Try it out!
 
 In our challenge, ManiSkill (this repo) contains the environments you need to work on, 
 and [ManiSkill-Learn](https://github.com/haosulab/ManiSkill-Learn) framework contains the baselines provided by us. 
