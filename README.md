@@ -94,8 +94,8 @@ Minimum requirements
 ### Installation
 First, clone this repository and `cd` into it.
 ```
-git clone https://github.com/haosulab/sapien-rl-benchmark.git
-cd sapien-rl-benchmark
+git clone https://github.com/haosulab/ManiSkill.git
+cd ManiSkill
 ```
 
 Second, install dependencies listed in `environment.yml`. 
