@@ -6,7 +6,9 @@ Learning generalizable manipulation skills is central for robots to achieve task
 
 Currently, ManiSkill has released 4 different tasks: OpenCabinetDoor, OpenCabinetDrawer, PushChair, and MoveBucket.
 
-[Click here for our website and paper.](https://sapien.ucsd.edu/challenges/maniskill2021)
+[Click here for our paper.](https://arxiv.org/abs/2107.14483)
+
+[Click here for ManiSKill Challenge website.](https://sapien.ucsd.edu/challenges/maniskill2021)
 
 This README describes how to install ManiSkill, how to run a basic example, and relevant environment details.
 
