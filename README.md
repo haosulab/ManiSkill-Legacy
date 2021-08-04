@@ -8,7 +8,7 @@ Currently, ManiSkill has released 4 different tasks: OpenCabinetDoor, OpenCabine
 
 [Click here for our paper.](https://arxiv.org/abs/2107.14483)
 
-[Click here for ManiSKill Challenge website.](https://sapien.ucsd.edu/challenges/maniskill2021)
+[Click here for SAPIEN Open-Source Manipulation Skill Challenge (ManiSkill Challenge) website.](https://sapien.ucsd.edu/challenges/maniskill2021)
 
 This README describes how to install ManiSkill, how to run a basic example, and relevant environment details.
 
