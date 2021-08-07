@@ -2,13 +2,13 @@
 
 ![](readme_files/teaser.png)
 
-Learning generalizable manipulation skills is central for robots to achieve task automation in real-life environments with endless scene and object variations. We propose SAPIEN Manipulation Skill Benchmark (abbreviated as **ManiSkill**, pronounced as "Many Skill"), a large-scale learning-from-demonstrations benchmark for articulated object manipulation with visual input (point cloud and image). ManiSkill supports object-level variations by utilizing a rich and diverse set of articulated objects, and each task is carefully designed for learning manipulations on a single category of objects. We equip ManiSkill with high-quality demonstrations to facilitate learning-from-demonstrations approaches and perform evaluations on common baseline algorithms. We believe ManiSkill can encourage the robot learning community to explore more on learning generalizable object manipulation skills.
+Learning to manipulate unseen objects from 3D visual inputs is crucial for robots to achieve task automation.  We propose SAPIEN Manipulation Skill Benchmark (abbreviated as **ManiSkill**, pronounced as "Many Skill"), a large-scale learning-from-demonstrations benchmark for articulated object manipulation with 3D visual input (point cloud and RGB-D image). ManiSkill supports object-level variations by utilizing a rich and diverse set of articulated objects, and each task is carefully designed for learning manipulations on a single category of objects. We equip ManiSkill with high-quality demonstrations to facilitate learning-from-demonstrations approaches and perform evaluations on baseline algorithms. We believe ManiSkill can encourage the robot learning community to explore more on learning generalizable object manipulation skills.
 
 Currently, ManiSkill has released 4 different tasks: OpenCabinetDoor, OpenCabinetDrawer, PushChair, and MoveBucket.
 
 [Click here for our paper.](https://arxiv.org/abs/2107.14483)
 
-[Click here for ManiSKill Challenge website.](https://sapien.ucsd.edu/challenges/maniskill2021)
+[Click here for SAPIEN Open-Source Manipulation Skill Challenge (ManiSkill Challenge) website.](https://sapien.ucsd.edu/challenges/maniskill2021)
 
 This README describes how to install ManiSkill, how to run a basic example, and relevant environment details.
 
