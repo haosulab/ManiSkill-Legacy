@@ -1,6 +1,6 @@
 # ManiSkill Benchmark
 
-![](readme_files/teaser.jpg)
+![](readme_files/teaser.png)
 
 Learning generalizable manipulation skills is central for robots to achieve task automation in real-life environments with endless scene and object variations. We propose SAPIEN Manipulation Skill Benchmark (abbreviated as **ManiSkill**, pronounced as "Many Skill"), a large-scale learning-from-demonstrations benchmark for articulated object manipulation with visual input (point cloud and image). ManiSkill supports object-level variations by utilizing a rich and diverse set of articulated objects, and each task is carefully designed for learning manipulations on a single category of objects. We equip ManiSkill with high-quality demonstrations to facilitate learning-from-demonstrations approaches and perform evaluations on common baseline algorithms. We believe ManiSkill can encourage the robot learning community to explore more on learning generalizable object manipulation skills.
 
