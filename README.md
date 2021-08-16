@@ -42,12 +42,14 @@ This README describes how to install ManiSkill, how to run a basic example, and 
   - [Advanced Usage](#advanced-usage)
     - [Custom Split](#custom-split)
     - [Visualization inside Docker](#visualization-inside-docker)
+    - [Operational Space Control](#operational-space-control)
   - [Conclusion](#conclusion)
   - [Acknowledgements](#acknowledgements)
   - [Citation](#citation)
 
 
 ## Updates and Announcements
+- Aug 16, 2021: ManiSkill now supports operational space control.
 - July 29, 2021: The initial version of ManiSkill is released!
 
 ## Preliminary Knowledge
@@ -213,6 +215,9 @@ While you do not need to worry about them, the details are provided below in cas
 All the tasks in ManiSkill use similar robots, which are composed of three parts: moving platform, Sciurus robot body, and one or two Franka Panda arm(s). The moving platform can move and rotate on the ground plane, and its height is also adjustable. The robot body is fixed on top of the platform, providing support for the arms. Depending on the task, one or two robot arm(s) are connected to the robot body. There are 22 joints in the dual-arm robot and 13 for the single-arm robot.
 To match with the realistic robotics setup, we use PID controllers to control the joints of the robots. The robot fingers use position controllers, while all other joints, including the moving platform joints and the arm joints, use velocity controllers. The controllers are internally implemented as augmented PD and PID controllers. The action space corresponds to the normalized target values of all controllers.
 
+We also provide another action interface based on operational space control, please see [Operational Space Control](#operational-space-control) for more details.
+
+
 ### Observations
 ManiSkill supports three observation modes: `state`, `pointcloud` and `rgbd`, which can be set by `env.set_env_mode(obs_mode=obs_mode)`.
 For all observation modes, the observation consist of three components: 1) A vector that describes the current state of the robot, including pose, velocity, angular velocity of the moving platform of the robot, joint angles and joint velocities of all robot joints, as well as states of all controllers; 2) A vector that describes task-relevant information, if necessary; 3) Perception of the scene, which has different representations according to the observation modes. In `state` mode, the perception information is a vector that encodes the full ground truth physical state of the environment (e.g. pose of the manipulated objects); in `pointcloud` mode, the perception information is a point cloud captured from the mounted cameras on the robot; in `rgbd` mode, the perception information is RGB-D images captured from the cameras.
@@ -363,6 +368,19 @@ Next, connect the x-server by
 xhost +local:`docker inspect --format='{{ .Config.Hostname }}' maniskill_container`
 ```
 You can replace the `maniskill_container` with your container name.
+
+### Operational Space Control
+The action passed to `env.step()` is a control signal in joint space. But we also provide provide another action interface based on operational space control. 
+In `maniskill/utils/osc.py`, we implement a class `OperationalSpaceControlInterface` which is used to convert the actions 
+between joint space and operational space, as well as some basic examples.
+
+`OperationalSpaceControlInterface` takes the name of the task as input, which is used to determine the type of robot and related information. It provides two functions `joint_space_to_operational_space_and_null_space` and `operational_space_and_null_space_to_joint_space` to map between the action in joint space and the actions in operational and null space. 
+
+Operational space of our robot contain three parts: the joints of the moving platform(4 dimensions: translation (x, y, z) and rotation about z), the joints of the robot fingers (2 * num of arms), 6D velocity of end-effectors in local(end-effector's) frame (6 * num of arms). 
+Null space contains 7 * num of arms degree of freedom. The action in null space will provide the movement in null space of the end-effector, which means the action will **only move the links on robot arm(s)** but keep the end-effector (link `left_panda_hand` or `right_panda_hand`)  static, when the operational action is a zero vector.
+
+We also provides some basic examples in the `test()` function in `maniskill/utils/osc.py`, please check it for further understanding.
+
 
 ## Conclusion
 Now that you have familiarized yourself with the ManiSkill benchmark, you can
