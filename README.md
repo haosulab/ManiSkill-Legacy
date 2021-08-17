@@ -2,7 +2,7 @@
 
 ![](readme_files/teaser.png)
 
-Learning to manipulate unseen objects from 3D visual inputs is crucial for robots to achieve task automation.  We propose SAPIEN Manipulation Skill Benchmark (abbreviated as **ManiSkill**, pronounced as "Many Skill"), a large-scale learning-from-demonstrations benchmark for articulated object manipulation with 3D visual input (point cloud and RGB-D image). ManiSkill supports object-level variations by utilizing a rich and diverse set of articulated objects, and each task is carefully designed for learning manipulations on a single category of objects. We equip ManiSkill with high-quality demonstrations to facilitate learning-from-demonstrations approaches and perform evaluations on baseline algorithms. We believe ManiSkill can encourage the robot learning community to explore more on learning generalizable object manipulation skills.
+Learning to manipulate unseen objects from 3D visual inputs is crucial for robots to achieve task automation.  We propose SAPIEN Manipulation Skill Benchmark (abbreviated as **ManiSkill**, pronounced as "Many Skill"), a large-scale learning-from-demonstrations benchmark for articulated object manipulation with 3D visual input (point cloud and RGB-D image). ManiSkill supports object-level variations by utilizing a rich and diverse set of articulated objects (162 objects over the 4 tasks in total), and each task is carefully designed for learning manipulations on a single category of objects. We equip ManiSkill with a large number of high-quality demonstrations (~36000 successful trajectories, ~1M 3D frames in total) to facilitate learning-from-demonstrations approaches and perform evaluations on baseline algorithms. We believe ManiSkill can encourage the robot learning community to explore more on learning generalizable object manipulation skills.
 
 Currently, ManiSkill has released 4 different tasks: OpenCabinetDoor, OpenCabinetDrawer, PushChair, and MoveBucket.
 
@@ -370,16 +370,17 @@ xhost +local:`docker inspect --format='{{ .Config.Hostname }}' maniskill_contain
 You can replace the `maniskill_container` with your container name.
 
 ### Operational Space Control
-The action passed to `env.step()` is a control signal in joint space. But we also provide provide another action interface based on operational space control. 
-In `maniskill/utils/osc.py`, we implement a class `OperationalSpaceControlInterface` which is used to convert the actions 
-between joint space and operational space, as well as some basic examples.
+The action passed into `env.step()` is a control signal in the joint space. In addition, we provide another action interface based on operational space control. 
+In `maniskill/utils/osc.py`, we implement a class `OperationalSpaceControlInterface`, which is used to convert actions 
+between the joint space and the operational space. We also provide some basic examples.
 
-`OperationalSpaceControlInterface` takes the name of the task as input, which is used to determine the type of robot and related information. It provides two functions `joint_space_to_operational_space_and_null_space` and `operational_space_and_null_space_to_joint_space` to map between the action in joint space and the actions in operational and null space. 
+`OperationalSpaceControlInterface` takes the name of a task as input, which is used to determine the type of robot and its related information. It provides two functions (`joint_space_to_operational_space_and_null_space` and `operational_space_and_null_space_to_joint_space`) to map between actions in the joint space and actions in the operational space and the null space. 
 
-Operational space of our robot contain three parts: the joints of the moving platform(4 dimensions: translation (x, y, z) and rotation about z), the joints of the robot fingers (2 * num of arms), 6D velocity of end-effectors in local(end-effector's) frame (6 * num of arms). 
-Null space contains 7 * num of arms degree of freedom. The action in null space will provide the movement in null space of the end-effector, which means the action will **only move the links on robot arm(s)** but keep the end-effector (link `left_panda_hand` or `right_panda_hand`)  static, when the operational action is a zero vector.
+The operational space of our robot contain three parts: the joints of the moving platform (4 dimensions: translation (x, y, z) and rotation about z), the joints of the robot fingers (2 * num_of_arms), and the 6D velocities of end-effectors in their local (i.e. end-effectors') frames (6 * num_of_arms). 
 
-We also provides some basic examples in the `test()` function in `maniskill/utils/osc.py`, please check it for further understanding.
+The null space contains 7 * num_of_arms degrees of freedom. An action in the null space (i.e. whose operational space component is a zero vector) provides movements in the null space of end-effectors, which means that it **only moves the links on the robot arm(s)** but keeps the end-effector (link `left_panda_hand` or `right_panda_hand`) static.
+
+We also provide some basic examples in the `test()` function of `maniskill/utils/osc.py`. Please check it for further understanding.
 
 
 ## Conclusion
