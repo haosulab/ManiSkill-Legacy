@@ -290,7 +290,7 @@ class OpenCabinetEnvBase(BaseEnv):
             reward += dist_reward + vel_reward
             if flag_dict['open_enough']:
                 stage_reward += (vel_coefficient + 2)
-                reward -= vel_reward + gripper_vel_rew
+                reward = reward - vel_reward + gripper_vel_rew
                 if flag_dict['cabinet_static']:
                     stage_reward += 1
         info_dict = {
