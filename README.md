@@ -1,6 +1,8 @@
 # ManiSkill Benchmark
 
 ![](readme_files/teaser.png)
+![](readme_files/5x4_objects.png)
+![](readme_files/pcd_visualization.png)
 
 Learning to manipulate unseen objects from 3D visual inputs is crucial for robots to achieve task automation.  We propose SAPIEN Manipulation Skill Benchmark (abbreviated as **ManiSkill**, pronounced as "Many Skill"), a large-scale learning-from-demonstrations benchmark for articulated object manipulation with 3D visual input (point cloud and RGB-D image). ManiSkill supports object-level variations by utilizing a rich and diverse set of articulated objects (162 objects over the 4 tasks in total), and each task is carefully designed for learning manipulations on a single category of objects. We equip ManiSkill with a large number of high-quality demonstrations (~36000 successful trajectories, ~1M 3D frames in total) to facilitate learning-from-demonstrations approaches and perform evaluations on baseline algorithms. We believe ManiSkill can encourage the robot learning community to explore more on learning generalizable object manipulation skills.
 
