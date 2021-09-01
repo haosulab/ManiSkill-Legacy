@@ -396,7 +396,7 @@ We thank Qualcomm for sponsoring the associated challenge, Sergey Levine and Ash
 ## Citation
 ```
 @article{mu2021maniskill,
-  title={ManiSkill: Learning-from-Demonstrations Benchmark for Generalizable Manipulation Skills},
+  title={ManiSkill: Generalizable Manipulation Skill Benchmark with Large-Scale Demonstrations},
   author={Mu, Tongzhou and Ling, Zhan and Xiang, Fanbo and Yang, Derek and Li, Xuanlin, and Tao, Stone and Huang, Zhiao and Jia, Zhiwei and Su, Hao},
   journal={arXiv preprint arXiv:2107.14483},
   year={2021}
