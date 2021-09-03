@@ -296,9 +296,18 @@ class BaseEnv(Env):
         # special case for ground
         if actor['parts'] and actor['parts'][0]['type'] == 'ground':
             shape = actor['parts'][0]
+
+            builder: sapien.ActorBuilder = self._scene.create_actor_builder()
+            builder.add_box_visual(
+                pose=Pose(p=(0,0,-1), q=(0,0,0,1)), 
+                half_size=[50, 50, 1], 
+                material=self.render_materials['ground'],
+            )
+            visual_ground: sapien.Actor = builder.build_static(name='visual_ground')
+
             a = self._scene.add_ground(
                 shape['altitude'],
-                shape['visual'],
+                False,
                 self.physical_materials[shape['surface_material']]
                 if 'surface_material' in shape
                 else None,
