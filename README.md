@@ -51,6 +51,7 @@ This README describes how to install ManiSkill, how to run a basic example, and 
 
 
 ## Updates and Announcements
+- Sep 3, 2021: Critical Update: A mismatch between our environments and our demonstration data (which can adversely affect Point Cloud-based models) has been fixed. Please pull from our latest repo.
 - Aug 16, 2021: ManiSkill now supports operational space control.
 - July 29, 2021: The initial version of ManiSkill is released!
 
