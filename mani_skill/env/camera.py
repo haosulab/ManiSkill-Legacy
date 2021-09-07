@@ -1,9 +1,12 @@
-import numpy as np
-from cupy import fromDlpack, asnumpy
+import numpy as np, os
 
-def get_texture_by_dltensor(cam, tag):
-    dlpack = cam.get_dl_tensor(tag)
-    return asnumpy(fromDlpack(dlpack))
+def get_texture_by_dltensor(cam, tag, dtype='float'):
+    if os.environ.get('NO_CUPY', 0) == 1:
+        from cupy import fromDlpack, asnumpy
+        dlpack = cam.get_dl_tensor(tag)
+        return asnumpy(fromDlpack(dlpack))
+    else:
+        return getattr(cam, f'get_{dtype}_texture')(tag)
 
 def read_images_from_camera(cam, depth=False, seg_indices=None):
     img = {}
@@ -11,7 +14,7 @@ def read_images_from_camera(cam, depth=False, seg_indices=None):
     if depth:
         img['depth'] = get_texture_by_dltensor(cam, "Position")[:, :, [-1]]
     if seg_indices is not None:
-        seg = get_texture_by_dltensor(cam, "Segmentation")[..., seg_indices] # 0 is visual id, 1 is actor id
+        seg = get_texture_by_dltensor(cam, "Segmentation", 'uint32')[..., seg_indices] # 0 is visual id, 1 is actor id
         if len(seg.shape) < 3:
             seg = np.expand_dims(seg, axis=2)
         img['seg'] = seg
@@ -25,7 +28,7 @@ def read_pointclouds_from_camera_with_depth_filtering(cam, depth=True, seg_indic
     pcd['rgb'] = get_texture_by_dltensor(cam, "Color")[:, :, :3][mask]
     pcd['xyz'] = pos_depth[:, :, :3][mask]
     if seg_indices is not None:
-        seg = get_texture_by_dltensor(cam, "Segmentation")[..., seg_indices]
+        seg = get_texture_by_dltensor(cam, "Segmentation", 'uint32')[..., seg_indices]
         if len(seg.shape) < 3:
             seg = np.expand_dims(seg, axis=2)
         pcd['seg'] = seg[mask]
@@ -39,7 +42,7 @@ def read_pointclouds_from_camera(cam, depth=True, seg_indices=None):
     pcd['rgb'] = get_texture_by_dltensor(cam, "Color")[:, :, :3].reshape(-1, 3)
     pcd['xyz'] = pos_depth[:, :, :3].reshape(-1, 3)
     if seg_indices is not None:
-        seg = get_texture_by_dltensor(cam, "Segmentation")[..., seg_indices]
+        seg = get_texture_by_dltensor(cam, "Segmentation", 'uint32')[..., seg_indices]
         if len(seg.shape) < 3:
             seg = np.expand_dims(seg, axis=2)
         pcd['seg'] = seg.reshape(pcd['xyz'].shape[0], -1)
@@ -86,5 +89,3 @@ class CombinedCamera(object):
             return self.get_images_list(depth, seg_indices)
         else: # pointcloud
             return self.get_fused_pointcloud(seg_indices)
-
-
