@@ -379,7 +379,7 @@ between the joint space and the operational space. We also provide some basic ex
 
 `OperationalSpaceControlInterface` takes the name of a task as input, which is used to determine the type of robot and its related information. It provides two functions (`joint_space_to_operational_space_and_null_space` and `operational_space_and_null_space_to_joint_space`) to map between actions in the joint space and actions in the operational space and the null space. 
 
-The operational space of our robot contain three parts: the joints of the moving platform (4 dimensions: translation (x, y, z) and rotation about z), the joints of the robot fingers (2 * num_of_arms), and the 6D velocities of end-effectors in their local (i.e. end-effectors') frames (6 * num_of_arms). 
+The operational space of our robot contain three parts: the joints of the moving platform (4 dimensions: translation (x, y, z) and rotation about z), the joints of the robot fingers (2 * num_of_arms), and the 6D velocities of end-effectors in their local (i.e. end-effectors') frames (6 * num_of_arms). To be more specific, the 6D velocity of end-effector is a body twist at the end effector origin frame ordered as `[v omega]`.
 
 The null space contains 7 * num_of_arms degrees of freedom. An action in the null space (i.e. whose operational space component is a zero vector) provides movements in the null space of end-effectors, which means that it **only moves the links on the robot arm(s)** but keeps the end-effector (link `left_panda_hand` or `right_panda_hand`) static.
 
