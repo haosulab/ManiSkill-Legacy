@@ -212,13 +212,13 @@ class Agent:
 
     def get_state(self, by_dict=False, with_controller_state=True):
         state_dict = {}
-        ee_pos = self.get_ee_coords().flatten()
-        ee_vel = self.get_ee_vels().flatten()
+        fingers_pos = self.get_ee_coords().flatten()
+        fingers_vel = self.get_ee_vels().flatten()
         qpos = self.robot.get_qpos()[self.all_joint_indices]
         qvel = self.robot.get_qvel()[self.all_joint_indices]
         state_dict = {
-            'ee_pos': ee_pos,
-            'ee_vel': ee_vel,
+            'fingers_pos': fingers_pos,
+            'fingers_vel': fingers_vel,
             'qpos': qpos,
             'qvel': qvel,
         }
@@ -247,7 +247,7 @@ class Agent:
         if not by_dict:
             assert len(state) == self.full_state_len,\
                 'length of state is not correct, probably because controller states are missing'
-            state = state[self.num_ee*12:] # remove ee_pos and ee_vel
+            state = state[self.num_ee*12:] # remove fingers_pos and fingers_vel
             state_dict = {
                 'qpos': state[:self.robot.dof],
                 'qvel': state[self.robot.dof:2*self.robot.dof],
@@ -343,7 +343,7 @@ class DummyMobileAgent(Agent):
         else:
             # return concat_values(state_dict.values())
             key_list = [
-                    'ee_pos', 'ee_vel',
+                    'fingers_pos', 'fingers_vel',
                     'base_pos', 'base_orientation', 'base_vel', 'base_ang_vel', 
                     'qpos', 'qvel',
                 ]
@@ -356,7 +356,7 @@ class DummyMobileAgent(Agent):
             # if input is not dict, we need to rearrange the order before passing to super().set_state()
             assert len(state) == self.full_state_len,\
                 'length of state is not correct, probably because controller states are missing'
-            state = state[self.num_ee*12:] # remove ee_pos and ee_vel
+            state = state[self.num_ee*12:] # remove fingers_pos and fingers_vel
             arms_dof = self.robot.dof - 3
             state_dict = {
                 'base_pos': state[:2],

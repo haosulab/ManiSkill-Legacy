@@ -45,6 +45,7 @@ This README describes how to install ManiSkill, how to run a basic example, and 
     - [Custom Split](#custom-split)
     - [Visualization inside Docker](#visualization-inside-docker)
     - [Operational Space Control](#operational-space-control)
+    - [Get Pose of End Effector](#get-pose-of-end-effector)
   - [Conclusion](#conclusion)
   - [Acknowledgements](#acknowledgements)
   - [Citation](#citation)
@@ -233,7 +234,7 @@ The following script shows the structure of the observations in different observ
 obs = {
     'agent': ... , # a vector that describes the agent's state, including pose, velocity, angular velocity of the 
                    # moving platform of the robot, joint angles and joint velocities of all robot joints, 
-                   # positions and velocities of end-effectors
+                   # positions and velocities of the robot fingers
     'pointcloud': {
         'rgb': ... , # (N, 3) array, RGB values for each point
         'xyz': ... , # (N, 3) array, position for each point, recorded in the world frame
@@ -245,7 +246,7 @@ obs = {
 obs = {
     'agent': ... , # a vector that describes agent's state, including pose, velocity, angular velocity of the 
                    # moving platform of the robot, joint angles and joint velocities of all robot joints, 
-                   # positions and velocities of end-effectors
+                   # positions and velocities of the robot fingers
     'rgbd': {
         'rgb': ... , # (160, 400, 3*3) array, three RGB images concatenated on the last dimension, captured by three cameras on robot
         'depth': ... , # (160, 400, 3) array, three depth images concatenated on the last dimension
@@ -379,12 +380,16 @@ between the joint space and the operational space. We also provide some basic ex
 
 `OperationalSpaceControlInterface` takes the name of a task as input, which is used to determine the type of robot and its related information. It provides two functions (`joint_space_to_operational_space_and_null_space` and `operational_space_and_null_space_to_joint_space`) to map between actions in the joint space and actions in the operational space and the null space. 
 
-The operational space of our robot contain three parts: the joints of the moving platform (4 dimensions: translation (x, y, z) and rotation about z), the joints of the robot fingers (2 * num_of_arms), and the 6D velocities of end-effectors in their local (i.e. end-effectors') frames (6 * num_of_arms). To be more specific, the 6D velocity of end-effector is a body twist at the end effector origin frame ordered as `[v omega]`.
+The operational space of our robot contain three parts: the joints of the moving platform (4 dimensions: translation (x, y, z) and rotation about z), the joints of the robot fingers (2 * num_of_arms), and the 6D velocities of end effectors in their local (i.e. end effectors') frames (6 * num_of_arms). To be more specific, the 6D velocity of end effector is a body twist at the end effector origin frame ordered as `[v omega]`.
 
-The null space contains 7 * num_of_arms degrees of freedom. An action in the null space (i.e. whose operational space component is a zero vector) provides movements in the null space of end-effectors, which means that it **only moves the links on the robot arm(s)** but keeps the end-effector (link `left_panda_hand` or `right_panda_hand`) static.
+The null space contains 7 * num_of_arms degrees of freedom. An action in the null space (i.e. whose operational space component is a zero vector) provides movements in the null space of end effectors, which means that it **only moves the links on the robot arm(s)** but keeps the end effector (link `left_panda_hand` or `right_panda_hand`) static.
 
 We also provide some basic examples in the `test()` function of `maniskill/utils/osc.py`. Please check it for further understanding.
 
+### Get Pose of End Effector
+If you want to manually design some controllers, then the pose(s) of the end effector(s) might be needed. 
+We provided an [example](https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/ee.py) to compute the pose(s) of the end effector(s) from the observation dict. 
+Specifically, the poses of the end effectors refer to the poses of `right_panda_hand` / `left_panda_hand` links in our robot.
 
 ## Conclusion
 Now that you have familiarized yourself with the ManiSkill benchmark, you can

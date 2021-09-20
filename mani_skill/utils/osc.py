@@ -168,12 +168,12 @@ class OperationalSpaceControlInterface(object):
         else:
             raise NotImplementedError()
         s = agent_state
-        s = s[self.n_arms * 12:]  # remove ee_pos and ee_vel
+        s = s[self.n_arms * 12:]  # remove fingers_pos and fingers_vel
+        qpos_mobile_base = s[:3]
         s = s[6:]  # remove base pos and vel
         s = s[:(1 + 9 * self.n_arms)]  # remove qvel
-        s = np.concatenate([np.zeros(3), s])  # append dummy base qpos
+        s = np.concatenate([qpos_mobile_base, s])
         return s
-
 
 def test():
     import gym
