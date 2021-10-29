@@ -345,10 +345,14 @@ We registered two kinds of environments:
 2. Fixed-object environment
   - Only one object instance will be presented in the environment, and it will never be replaced by other object instances.
   - These environments are registered as simpler versions of the multi-object environments, and they can be used for debugging.
-  - Environment name examples: `PushChair_3000-v0`, `OpenCabinetDoor_1000_link_0-v0`, ... .
+  - Environment name examples: `PushChair_3000-v0`, `OpenCabinetDoor_1000-v0`, ... .
+3. Fixed-link environment
+  - Only OpenCabinetDoor and OpenCabinetDrawer have fixed-link environments, since a cabinet can have multiple target links (door or drawer).
+  - In a fixed-link environment, the target link (door or drawer) to be opened is fixed, and it will not change by calling `env.reset()`.
+  - Environment name examples: `OpenCabinetDoor_1000_link_0-v0`
+
 
 The full list of available environments can be found in `available_environments.txt`. 
-(Note: OpenCabinetDoor and OpenCabinetDrawer also have Single-link environments, in which the target door or drawer is fixed.)
 
 
 ## Advanced Usage
