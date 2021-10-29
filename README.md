@@ -338,7 +338,7 @@ the viewer will not run by itself when the program is paused.**
 
 
 ### Available Environments
-We registered two kinds of environments:
+We registered three kinds of environments:
 1. Random-object environment
   - If you call `env.reset()`, you may get a different object instance (e.g., a different chair in PushChair task).
   - Environment names: `OpenCabinetDoor-v0`, `OpenCabinetDrawer-v0`, `PushChair-v0`, and `MoveBucket-v0`.
