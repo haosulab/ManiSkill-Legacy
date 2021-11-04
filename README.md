@@ -392,7 +392,7 @@ We also provide some basic examples in the `test()` function of `maniskill/utils
 
 ### Get Pose of End Effector
 If you want to manually design some controllers, then the pose(s) of the end effector(s) might be needed. 
-We provided an [example](https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/ee.py) to compute the pose(s) of the end effector(s) from the observation dict. 
+We provided an [example](https://github.com/haosulab/ManiSkill/blob/main/mani_skill/utils/ee.py) to compute the pose(s) of the end effector(s) in the world frame from the observation dict. 
 Specifically, the poses of the end effectors refer to the poses of `right_panda_hand` / `left_panda_hand` links in our robot.
 
 ## Conclusion
