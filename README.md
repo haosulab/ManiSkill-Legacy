@@ -52,7 +52,7 @@ This README describes how to install ManiSkill, how to run a basic example, and 
 
 
 ## Updates and Announcements
-- Nov 6, 2021: We provided a more detailed explanation of the observations, see [here](https://github.com/haosulab/ManiSkill/wiki/Detailed-Explanation-About-State-Vector).
+- Nov 6, 2021: We provided a more detailed explanation of the observations, see [here](https://github.com/haosulab/ManiSkill/wiki/Detailed-Explanation-of-The-Agent-State-Vector).
 - Oct 11, 2021: ManiSkill has been accepted to **NeurIPS 2021 Track on Datasets and Benchmarks**!
 - Sep 5, 2021: The treatment of background points in observations are slightly different in the demonstration data and our old environments. We have changed the environments so that the background treatment matches exactly. Please pull the latest codes from the ManiSkill repo and rerun the evaluation scripts to measure performance. You do not need to update the demonstration data or retrain an existing model if it has been trained solely on our demonstration data (but you need to re-evaluate the model).
 - Aug 16, 2021: ManiSkill now supports operational space control.
@@ -265,7 +265,7 @@ obs = ... # a vector that describes agent's state, task-relevant information, an
 # as different objects may have completely different state representations. 
 
 ```
-A detailed explanation of the `agent` vector can be found [here](https://github.com/haosulab/ManiSkill/wiki/Detailed-Explanation-About-State-Vector).
+A detailed explanation of the `agent` vector can be found [here](https://github.com/haosulab/ManiSkill/wiki/Detailed-Explanation-of-The-Agent-State-Vector).
 
 
 The observations `obs` are typically obtained when resetting and stepping the environment as shown below
