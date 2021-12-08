@@ -409,10 +409,10 @@ We thank Qualcomm for sponsoring the associated challenge, Sergey Levine and Ash
 
 ## Citation
 ```
-@article{mu2021maniskill,
+@inproceedings{mu2021maniskill,
   title={ManiSkill: Generalizable Manipulation Skill Benchmark with Large-Scale Demonstrations},
-  author={Mu, Tongzhou and Ling, Zhan and Xiang, Fanbo and Yang, Derek and Li, Xuanlin, and Tao, Stone and Huang, Zhiao and Jia, Zhiwei and Su, Hao},
-  journal={arXiv preprint arXiv:2107.14483},
+  author={Mu, Tongzhou and Ling, Zhan and Xiang, Fanbo and Yang, Derek Cathera and Li, Xuanlin and Tao, Stone and Huang, Zhiao and Jia, Zhiwei and Su, Hao},
+  booktitle={Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 2)},
   year={2021}
 }
 ```
