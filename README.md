@@ -52,6 +52,7 @@ This README describes how to install ManiSkill, how to run a basic example, and 
 
 
 ## Updates and Announcements
+- Feb 16, 2022: We launched a [temporary test server](https://sapien.ucsd.edu/challenges/maniskill2021test/) to provide test set evaluation service.
 - Nov 15, 2021: We provided a detailed explanation of the action space, see [here](https://github.com/haosulab/ManiSkill/wiki/Detailed-Explanation-of-Action).
 - Nov 6, 2021: We provided a more detailed explanation of the observations, see [here](https://github.com/haosulab/ManiSkill/wiki/Detailed-Explanation-of-The-Agent-State-Vector).
 - Oct 11, 2021: ManiSkill has been accepted to **NeurIPS 2021 Track on Datasets and Benchmarks**!
