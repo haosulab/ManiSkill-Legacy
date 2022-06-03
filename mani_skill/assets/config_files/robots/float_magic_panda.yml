@@ -6,11 +6,15 @@ all_joints: [
   "x_axis_joint",
   "y_axis_joint",
   "z_axis_joint",
+  "panda_finger_joint1",
+  "panda_finger_joint2",
 ]
 controllable_joints: [
   "x_axis_joint",
   "y_axis_joint",
   "z_axis_joint",
+  "panda_finger_joint1",
+  "panda_finger_joint2",
 ]
 initial_qpos: [
   0, 0, 0, 0.04, 0.04
@@ -60,6 +64,10 @@ joints:
     velocity_filter:
       cutoff_frequency: 40
 
+  - name: "panda_finger_joint1"
+    _include: "default_finger_params.yml"
+  - name: "panda_finger_joint2"
+    _include: "default_finger_params.yml"
 
   # - name: "right_panda_joint1" ## ?? 
   #   _include: "default_arm_params.yml"

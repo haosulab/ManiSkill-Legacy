@@ -13,6 +13,11 @@ register(
     entry_point='mani_skill.env.open_cabinet_door_drawer:OpenCabinetDoorEnv',
 )
 
+register(
+    id='OpenCabinetDrawerMagic-v0',
+    entry_point='mani_skill.env.open_cabinet_door_drawer:OpenCabinetDrawerMagicEnv',
+)
+
 cabinet_door_model_file = _this_file.parent.joinpath("../assets/config_files/cabinet_models_door.yml")
 # cabinet_door_ids = get_model_ids_from_yaml(cabinet_door_model_file)
 cabinet_door_infos = get_raw_yaml(cabinet_door_model_file)

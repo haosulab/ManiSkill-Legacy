@@ -371,3 +371,29 @@ class OpenCabinetDrawerEnv(OpenCabinetEnvBase):
     @property
     def num_target_links(self):
         return super().num_target_links('prismatic')
+
+
+class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
+        def __init__(self, yaml_file_path=f'../assets/config_files/open_cabinet_door_magic.yml', *args, **kwargs):
+            super().__init__(
+                yaml_file_path=yaml_file_path, *args, **kwargs
+            )
+        def get_obs(self, **kwargs):
+            return np.zeros(5)
+
+        def _place_robot(self):
+            print("placing robot")
+            self.agent.robot.set_qpos([0,0,0,0.4,0.4])
+
+        def step(self, *args, **kwargs):
+            o = np.zeros(5)
+            r = 0 
+            d = False
+            i = {}
+            return o, r, d, i
+        def _choose_target_link(self):
+            super()._choose_target_link('prismatic')
+
+        @property
+        def num_target_links(self):
+            return super().num_target_links('prismatic')

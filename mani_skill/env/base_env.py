@@ -591,6 +591,7 @@ class BaseEnv(Env):
             if self._viewer is None:
                 self._viewer = Viewer(self._renderer)
                 self._setup_viewer()
+            
             self._viewer.render()
             return self._viewer
         else:

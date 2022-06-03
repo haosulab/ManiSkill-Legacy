@@ -5,6 +5,8 @@ from mani_skill.agent.controllers import LPFilter, PIDController, VelocityContro
 import yaml
 import transforms3d
 from mani_skill.utils.geometry import rotate_2d_vec_by_angle
+from typing import Dict
+from collections import OrderedDict
 
 class CombinedAgent:
     def __init__(self, agents):
@@ -294,7 +296,7 @@ def concat_vec_in_dict(d, key_list):
 
 class MagicFloatingAgent(Agent):
     def __init__(self, *args, **kwargs):
-        supper().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
     
 
 
@@ -317,25 +319,26 @@ class MagicFloatingAgent(Agent):
         state = OrderedDict()
 
         # robot state
-        root_link = self._robot.get_links()[0]
+        root_link = self.robot.get_links()[0]
         state["robot_root_pose"] = root_link.get_pose()
         state["robot_root_vel"] = root_link.get_velocity()
         state["robot_root_qvel"] = root_link.get_angular_velocity()
-        state["robot_qpos"] = self._robot.get_qpos()
-        state["robot_qvel"] = self._robot.get_qvel()
-        state["robot_qacc"] = self._robot.get_qacc()
+        state["robot_qpos"] = self.robot.get_qpos()
+        state["robot_qvel"] = self.robot.get_qvel()
+        state["robot_qacc"] = self.robot.get_qacc()
 
 
         return state
 
     def set_state(self, state: Dict, **kwargs):
+        import pdb; pdb.set_trace()
         # robot state
-        self._robot.set_root_pose(state["robot_root_pose"])
-        self._robot.set_root_velocity(state["robot_root_vel"])
-        self._robot.set_root_angular_velocity(state["robot_root_qvel"])
-        self._robot.set_qpos(state["robot_qpos"])
-        self._robot.set_qvel(state["robot_qvel"])
-        self._robot.set_qacc(state["robot_qacc"])
+        self.robot.set_root_pose(state["robot_root_pose"])
+        self.robot.set_root_velocity(state["robot_root_vel"])
+        self.robot.set_root_angular_velocity(state["robot_root_qvel"])
+        self.robot.set_qpos(state["robot_qpos"])
+        self.robot.set_qvel(state["robot_qvel"])
+        self.robot.set_qacc(state["robot_qacc"])
     
 
 
