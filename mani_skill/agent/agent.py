@@ -292,6 +292,55 @@ def concat_vec_in_dict(d, key_list):
         d[key] if isinstance(d[key], np.ndarray) else np.array([d[key]]) for key in key_list
     ])
 
+class MagicFloatingAgent(Agent):
+    def __init__(self, *args, **kwargs):
+        supper().__init__(*args, **kwargs)
+    
+
+
+    def _get_base_orientation(self):
+        # active_joints[2] is root_z_rotation_joint
+        return self.robot.get_qpos()[self.all_joint_indices[2]]
+
+    def set_action(self, action: np.ndarray):
+        pass
+
+    def get_pose(self):
+        qpos = self.robot.get_qpos()[self.all_joint_indices]
+        x, y, theta = qpos[0], qpos[1], qpos[2]
+        return Pose([x,y,0], transforms3d.euler.euler2quat(0,0,theta))
+
+    def get_base_link(self):
+        pass
+
+    def get_state(self, **kwargs) -> Dict:
+        state = OrderedDict()
+
+        # robot state
+        root_link = self._robot.get_links()[0]
+        state["robot_root_pose"] = root_link.get_pose()
+        state["robot_root_vel"] = root_link.get_velocity()
+        state["robot_root_qvel"] = root_link.get_angular_velocity()
+        state["robot_qpos"] = self._robot.get_qpos()
+        state["robot_qvel"] = self._robot.get_qvel()
+        state["robot_qacc"] = self._robot.get_qacc()
+
+
+        return state
+
+    def set_state(self, state: Dict, **kwargs):
+        # robot state
+        self._robot.set_root_pose(state["robot_root_pose"])
+        self._robot.set_root_velocity(state["robot_root_vel"])
+        self._robot.set_root_angular_velocity(state["robot_root_qvel"])
+        self._robot.set_qpos(state["robot_qpos"])
+        self._robot.set_qvel(state["robot_qvel"])
+        self._robot.set_qacc(state["robot_qacc"])
+    
+
+
+
+
 class DummyMobileAgent(Agent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

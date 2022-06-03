@@ -1,0 +1,82 @@
+agent_class: "mani_skill.agent.agent.MagicFloatingAgent"
+name: "magic_floating_panda_hand"
+urdf_file: "../../robot/panda/float_panda.urdf" 
+control_frequency: 100
+all_joints: [
+  "x_axis_joint",
+  "y_axis_joint",
+  "z_axis_joint",
+]
+controllable_joints: [
+  "x_axis_joint",
+  "y_axis_joint",
+  "z_axis_joint",
+]
+initial_qpos: [
+  0, 0, 0, 0.04, 0.04
+]
+base_position: [0, 0, 0] ## TODO:
+base_rotation: [1, 0, 0, 0] ## TODO: 
+scale: 1
+balance_passive_force: true
+fix_base: true
+surface_materials:
+  - name: "gripper"
+    static_friction: 2
+    dynamic_friction: 2
+    restitution: 0   
+links:
+  - name: "right_panda_leftfinger"
+    surface_material: "gripper"
+    patch_radius: 0.1
+    min_patch_radius: 0.1
+  - name: "right_panda_rightfinger"
+    surface_material: "gripper"
+    patch_radius: 0.1
+    min_patch_radius: 0.1
+joints:
+  - name: "x_axis_joint"
+    stiffness: 0
+    damping: 1000
+    friction: 0.1
+    action_type: "velocity" ## other controller available?
+    action_range: [-0.5, 0.5] ## TODO: -1, 1
+    velocity_filter:
+      cutoff_frequency: 40
+  - name: "y_axis_joint"
+    stiffness: 0
+    damping: 1000
+    friction: 0.1
+    action_type: "velocity"
+    action_range: [-0.5, 0.5]
+    velocity_filter:
+      cutoff_frequency: 40
+  - name: "z_axis_joint"
+    stiffness: 0
+    damping: 1000
+    friction: 0.1
+    action_type: "velocity"
+    action_range: [-0.5, 0.5]
+    velocity_filter:
+      cutoff_frequency: 40
+
+
+  # - name: "right_panda_joint1" ## ?? 
+  #   _include: "default_arm_params.yml"
+  # - name: "right_panda_joint2"
+  #   _include: "default_arm_params.yml"
+  # - name: "right_panda_joint3"
+  #   _include: "default_arm_params.yml"
+  # - name: "right_panda_joint4"
+  #   _include: "default_arm_params.yml"
+  # - name: "right_panda_joint5"
+  #   _include: "default_arm_params.yml"
+  # - name: "right_panda_joint6"
+  #   _include: "default_arm_params.yml"
+  # - name: "right_panda_joint7"
+  #   _include: "default_arm_params.yml"
+
+  # - name: "right_panda_finger_joint1"
+  #   _include: "default_finger_params.yml"
+  # - name: "right_panda_finger_joint2"
+  #   _include: "default_finger_params.yml"
