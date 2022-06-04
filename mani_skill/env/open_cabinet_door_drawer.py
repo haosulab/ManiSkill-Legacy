@@ -389,8 +389,8 @@ class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
 
         def _place_robot(self):
             print("placing robot")
-            self.agent.robot.set_qpos([0,0,0,0.04,0.04]) # tmu: confirm this is 0.4 or 0.04, you write 0.4
-
+            # self.agent.robot.set_qpos([-0.5,0,0.5,0.04,0.04]) # tmu: confirm this is 0.4 or 0.04, you write 0.4
+            pass
 
         def _choose_target_link(self):
             super()._choose_target_link('prismatic')

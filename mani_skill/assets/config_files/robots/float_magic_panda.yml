@@ -17,9 +17,9 @@ controllable_joints: [
   "panda_finger_joint2",
 ]
 initial_qpos: [
-  0, 0, 0, 0.04, 0.04
+  -0.5, 0, 1, 0.04, 0.04
 ]
-base_position: [0.5, 0, 0.5] ## TODO:
+base_position: [0,0,0] ## TODO:
 base_rotation: [1, 0, 0, 0] ## TODO: 
 scale: 1
 balance_passive_force: true
@@ -30,21 +30,22 @@ surface_materials:
     dynamic_friction: 2
     restitution: 0   
 links:
-  - name: "right_panda_leftfinger"
+  - name: "panda_leftfinger"
     surface_material: "gripper"
     patch_radius: 0.1
     min_patch_radius: 0.1
-  - name: "right_panda_rightfinger"
+  - name: "panda_rightfinger"
     surface_material: "gripper"
     patch_radius: 0.1
     min_patch_radius: 0.1
 joints:
   - name: "x_axis_joint"
-    stiffness: 3000
-    damping: 300
-    friction: 0
+    stiffness: 0
+    damping:  1000
+    friction: 0.1
     action_type: "delta_position" ## other controller available?
-    action_range: [-0.025, 0.025] ## TODO: -1, 1 # tmu: don't chagne this to (-1, 1), ManiSkill envs will normalize it automatically
+    #action_range: [-0.025, 0.025]
+    action_range: [-0.5, 0.5] 
     velocity_filter:
       cutoff_frequency: 40
     velocity_pid:
@@ -53,11 +54,12 @@ joints:
       kd: 0.01
       limit: [-100, 100]
   - name: "y_axis_joint"
-    stiffness: 3000
-    damping: 300
-    friction: 0
+    stiffness: 0
+    damping:  1000
+    friction: 0.1
     action_type: "delta_position"
-    action_range: [-0.025, 0.025]
+    #action_range: [-0.025, 0.025]
+    action_range: [-0.5, 0.5]
     velocity_filter:
       cutoff_frequency: 40
     velocity_pid:
@@ -66,11 +68,13 @@ joints:
       kd: 0.01
       limit: [-100, 100]
   - name: "z_axis_joint"
-    stiffness: 3000
-    damping: 300
-    friction: 0
+    stiffness: 0
+    damping: 1000
+    friction: 0.1
     action_type: "delta_position"
-    action_range: [-0.025, 0.025]
+    # action_type: "velocity"
+    #action_range: [-0.025, 0.025]
+    action_range: [-0.5, 0.5]
     velocity_filter:
       cutoff_frequency: 40
     velocity_pid:
@@ -78,6 +82,34 @@ joints:
       ki: 0
       kd: 0.01
       limit: [-100, 100]
+# joints:
+#   - name: "x_axis_joint"
+#     stiffness: 0
+#     damping:  1000
+#     friction: 0.1
+#     action_type: "velocity" ## other controller available?
+#     action_range: [-0.025, 0.025] ## TODO: -1, 1 # tmu: don't chagne this to (-1, 1), ManiSkill envs will normalize it automatically
+#     velocity_filter:
+#       cutoff_frequency: 40
+
+#   - name: "y_axis_joint"
+#     stiffness: 0
+#     damping:  1000
+#     friction: 0.1
+#     action_type: "velocity"
+#     action_range: [-0.025, 0.025]
+#     velocity_filter:
+#       cutoff_frequency: 40
+
+#   - name: "z_axis_joint"
+#     stiffness: 0
+#     damping: 1000
+#     friction: 0.1
+#     #action_type: "delta_position"
+#     action_type: "velocity"
+#     action_range: [-0.025, 0.025]
+#     velocity_filter:
+#       cutoff_frequency: 40
 
   - name: "panda_finger_joint1"
     _include: "default_finger_params.yml"

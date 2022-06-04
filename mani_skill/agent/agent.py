@@ -206,7 +206,7 @@ class Agent:
                 output = controller.control(qvel[j_idx], target)
             else:
                 raise Exception('this should not happen, please report it')
-            print(j_idx, target, output)
+            print('joint', j_idx, 'delta_target', target, 'controller output',output)
             self.active_joints[j_idx].set_drive_velocity_target(output)
 
     def simulation_step(self):

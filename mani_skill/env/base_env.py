@@ -549,10 +549,17 @@ class BaseEnv(Env):
             for _ in range(self.n_simulation_per_control_step):
                 self.agent.simulation_step()
                 self._scene.step()
+        print("step {}: qpos {} qvel {}".format(
+            self.step_in_ep,
+            self.agent.robot.get_qpos(),
+            self.agent.robot.get_qvel()))
+        # print("step {}: vel drive target {}".format(
+        #     self.step_in_ep,
+        #     [joint.get_drive_velocity_target() for joint in self.agent.robot.get_active_joints()]
+        # ))
 
         info = {}
         info['eval_info'], done = self._eval()
-        import pdb; pdb.set_trace()
         if self.reward_type == 'sparse':
             reward = int(info['eval_info']['success'])
         elif self.reward_type == 'dense':

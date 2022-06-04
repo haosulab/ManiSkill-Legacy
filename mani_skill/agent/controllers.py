@@ -48,7 +48,7 @@ class PIDController:
 
         self._prev_err = err
         self._cum_err += self.dt * err
-
+        print('value', value)
         return np.clip(value, self.output_range[0], self.output_range[1])
 
 
@@ -116,6 +116,7 @@ class PositionController:
             target velocity for low level PD controller
         """
         if self.use_delta:
+            print('current', current, 'delta', target, 'target', target+current)
             target = current + target
         target_vel = self.velocity_pid.control(current, target)
         if self.lp_filter is not None:
