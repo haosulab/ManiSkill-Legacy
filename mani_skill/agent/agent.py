@@ -194,7 +194,6 @@ class Agent:
 
     def set_action(self, action: np.ndarray):
         assert action.shape == self._action_range.shape
-
         qpos = self.robot.get_qpos()
         qvel = self.robot.get_qvel()
 
@@ -207,6 +206,7 @@ class Agent:
                 output = controller.control(qvel[j_idx], target)
             else:
                 raise Exception('this should not happen, please report it')
+            print(j_idx, target, output)
             self.active_joints[j_idx].set_drive_velocity_target(output)
 
     def simulation_step(self):
@@ -314,8 +314,7 @@ class MagicFloatingAgent(Agent):
         # active_joints[2] is root_z_rotation_joint
         return self.robot.get_qpos()[self.all_joint_indices[2]]
 
-    def set_action(self, action: np.ndarray):
-        pass
+    ## set_action() inherits base agent.
 
     def get_pose(self):
         qpos = self.robot.get_qpos()[self.all_joint_indices]
@@ -341,7 +340,6 @@ class MagicFloatingAgent(Agent):
         return state
 
     def set_state(self, state: Dict, **kwargs):
-        import pdb; pdb.set_trace()
         # robot state
         self.robot.set_root_pose(state["robot_root_pose"])
         self.robot.set_root_velocity(state["robot_root_vel"])

@@ -549,10 +549,10 @@ class BaseEnv(Env):
             for _ in range(self.n_simulation_per_control_step):
                 self.agent.simulation_step()
                 self._scene.step()
-        
+
         info = {}
         info['eval_info'], done = self._eval()
-
+        import pdb; pdb.set_trace()
         if self.reward_type == 'sparse':
             reward = int(info['eval_info']['success'])
         elif self.reward_type == 'dense':

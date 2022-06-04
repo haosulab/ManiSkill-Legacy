@@ -19,7 +19,7 @@ controllable_joints: [
 initial_qpos: [
   0, 0, 0, 0.04, 0.04
 ]
-base_position: [0, 0, 0] ## TODO:
+base_position: [0.5, 0, 0.5] ## TODO:
 base_rotation: [1, 0, 0, 0] ## TODO: 
 scale: 1
 balance_passive_force: true

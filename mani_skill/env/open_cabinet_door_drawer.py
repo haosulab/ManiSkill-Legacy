@@ -379,18 +379,19 @@ class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
                 yaml_file_path=yaml_file_path, *args, **kwargs
             )
         def get_obs(self, **kwargs):
-            return np.zeros(5)
+            dense_obs = np.zeros(5+5)
+            robot = self.agent.robot
+            qpos = robot.get_qpos()
+            qvel = robot.get_qvel()
+            dense_obs[:5] = qpos
+            dense_obs[5:] = qvel
+            return dense_obs
 
         def _place_robot(self):
             print("placing robot")
             self.agent.robot.set_qpos([0,0,0,0.04,0.04]) # tmu: confirm this is 0.4 or 0.04, you write 0.4
 
-        def step(self, *args, **kwargs):
-            o = np.zeros(5)
-            r = 0 
-            d = False
-            i = {}
-            return o, r, d, i
+
         def _choose_target_link(self):
             super()._choose_target_link('prismatic')
 
