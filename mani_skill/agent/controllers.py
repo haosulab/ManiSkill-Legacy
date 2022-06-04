@@ -73,8 +73,31 @@ class VelocityController:
         return self.lp_filter.next(target)
 
 
+# class PositionController:
+#     def __init__(self, velocity_pid, lp_filter):
+#         """
+#         Args:
+#             velocity_pid: PIDController for converting position signal to velocity signal
+#             lp_filter: None|LPFilter for filtering output velocity
+#         """
+#         self.velocity_pid = velocity_pid
+#         self.lp_filter = lp_filter
+
+#     def control(self, current, target):
+#         """
+#         Args:
+#             current: current position
+#             target: target position
+#         Returns:
+#             target velocity for low level PD controller
+#         """
+#         target_vel = self.velocity_pid.control(current, target)
+#         if self.lp_filter is not None:
+#             target_vel = self.lp_filter.next(target_vel)
+#         return target_vel
+
 class PositionController:
-    def __init__(self, velocity_pid, lp_filter):
+    def __init__(self, velocity_pid, lp_filter, use_delta=False):
         """
         Args:
             velocity_pid: PIDController for converting position signal to velocity signal
@@ -82,6 +105,7 @@ class PositionController:
         """
         self.velocity_pid = velocity_pid
         self.lp_filter = lp_filter
+        self.use_delta = use_delta
 
     def control(self, current, target):
         """
@@ -91,6 +115,8 @@ class PositionController:
         Returns:
             target velocity for low level PD controller
         """
+        if self.use_delta:
+            target = current + target
         target_vel = self.velocity_pid.control(current, target)
         if self.lp_filter is not None:
             target_vel = self.lp_filter.next(target_vel)

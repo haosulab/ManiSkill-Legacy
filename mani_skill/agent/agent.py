@@ -169,6 +169,16 @@ class Agent:
                     PIDController(kp, ki, kd, self.control_frequency, limit),
                     velocity_filter,
                 )
+            elif action_type == 'delta_position':
+                kp = joint['velocity_pid']['kp']
+                ki = joint['velocity_pid']['ki']
+                kd = joint['velocity_pid']['kd']
+                limit = joint['velocity_pid']['limit']
+                controller = PositionController(
+                    PIDController(kp, ki, kd, self.control_frequency, limit),
+                    velocity_filter,
+                    use_delta=True,
+                )
             else:
                 raise RuntimeError('Only velocity or position are valid action types')
             controllers.append(controller)

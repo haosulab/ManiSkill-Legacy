@@ -383,7 +383,7 @@ class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
 
         def _place_robot(self):
             print("placing robot")
-            self.agent.robot.set_qpos([0,0,0,0.4,0.4])
+            self.agent.robot.set_qpos([0,0,0,0.04,0.04]) # tmu: confirm this is 0.4 or 0.04, you write 0.4
 
         def step(self, *args, **kwargs):
             o = np.zeros(5)
