@@ -1,0 +1,9 @@
+fovy: 1.57079633 # pi/2s
+near: 0.001
+far: 10
+width: 512 ## change to 128, 128 once done coding heuristic
+height: 512
+
+        # state_visual = self._scene.add_camera(
+        #     'state_visual', 128, 128, np.pi / 2.4, 0.001, 10
+        # )

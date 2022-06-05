@@ -1,3 +1,4 @@
+import pdb
 import numpy as np
 
 from sapien.core import Pose, Articulation
@@ -81,6 +82,7 @@ class OpenCabinetEnvBase(BaseEnv):
                     mesh = np2mesh(vertices, i.mesh.indices.reshape(-1, 3))
                     o3d_info[link_name].append(mesh)
                     handles_info[link_name].append((i.mesh.vertices * i.scale, i.mesh.indices, i.pose))
+            
             if len(handles_info[link_name]) == 0:
                 handles_info.pop(link_name)
                 handles_visual_body_ids.pop(link_name)
@@ -364,6 +366,7 @@ class OpenCabinetDrawerEnv(OpenCabinetEnvBase):
         super().__init__(
             yaml_file_path=yaml_file_path, *args, **kwargs
         )
+
     
     def _choose_target_link(self):
         super()._choose_target_link('prismatic')
@@ -378,17 +381,34 @@ class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
             super().__init__(
                 yaml_file_path=yaml_file_path, *args, **kwargs
             )
+            self.magic_drive = None
+            self.connected=False
+        
+        def reset(self, **kwargs):
+            self.magic_drive = None
+            self.connected = False
+            return super().reset(**kwargs)
         def get_obs(self, **kwargs):
-            dense_obs = np.zeros(5+5)
+            dense_obs = np.zeros(5+5+1) # robot qpos [5] robot qvel [5] target_link (qpos) [1]
             robot = self.agent.robot
             qpos = robot.get_qpos()
             qvel = robot.get_qvel()
             dense_obs[:5] = qpos
-            dense_obs[5:] = qvel
+            dense_obs[5:10] = qvel
+            dense_obs[10:11] = self.cabinet.get_qpos()[self.target_index_in_active_joints]
             return dense_obs
 
+        def get_handle_coord(self):
+            handles_info = self.handles_info
+            #pdb.set_trace()
+            handle_pose = handles_info[self.target_link_name][-1][-1]
+            assert type(handle_pose) == Pose
+            coords = handle_pose.p
+            coords2 = apply_pose_to_points(coords, self.cabinet.get_root_pose())
+            return coords2
+
         def _place_robot(self):
-            print("placing robot")
+            #print("placing robot")
             # self.agent.robot.set_qpos([-0.5,0,0.5,0.04,0.04]) # tmu: confirm this is 0.4 or 0.04, you write 0.4
             pass
 
@@ -398,3 +418,40 @@ class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
         @property
         def num_target_links(self):
             return super().num_target_links('prismatic')
+
+        def magic_grasp(self):
+            assert self.magic_drive is None
+            assert self.connected is False
+
+            actor1 = self.agent.grasp_site
+            pose1 = Pose(p=[0,0,0], q=[1,0,0,0])
+            
+            actor2 = self.target_link
+            # maybe first get handle's world pose and convert it to actor2's frame?
+            #T_w_handle = self.handles_info[self.target_link_name][-1][-1] #world frame
+            # actor 2 is the target link, get target link pose
+            #pose2_mat = T_w_handle.inv().to_transformation_matrix() @ actor_2_frame.to_transformation_matrix()
+            #pose2 = Pose.from_transformation_matrix(pose2_mat)
+            #pose2 = apply_pose_to_points(T_w_handle.p, actor2.get_pose())
+            #pose2 = Pose(p=[0,0,0],q=[1,0,0,0])
+
+            pose2=actor1.pose.inv().to_transformation_matrix() @ actor2.pose.to_transformation_matrix()
+            pose2=Pose.from_transformation_matrix(pose2) 
+
+
+
+
+
+            magic_drive=self._scene.create_drive(actor1, pose1, actor2, pose2)
+            magic_drive.set_x_properties(stiffness=5e4, damping=3e3)
+            magic_drive.set_y_properties(stiffness=5e4, damping=3e3)
+            magic_drive.set_z_properties(stiffness=5e4, damping=3e3)
+            magic_drive.set_slerp_properties(stiffness=5e4, damping=3e3)
+
+            self.connected = True
+            self.magic_drive = magic_drive
+
+        def magic_release(self):
+            if self.connected is True:
+                self.connected = False
+                self.magic_drive = None

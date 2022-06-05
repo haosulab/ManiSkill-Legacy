@@ -1,6 +1,6 @@
 agent_class: "mani_skill.agent.agent.MagicFloatingAgent"
 name: "magic_floating_panda_hand"
-urdf_file: "../../robot/panda/float_panda.urdf" 
+urdf_file: "../../robot/panda/float_panda_correct_ori.urdf" 
 control_frequency: 100
 all_joints: [
   "x_axis_joint",

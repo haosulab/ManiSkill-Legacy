@@ -206,7 +206,7 @@ class Agent:
                 output = controller.control(qvel[j_idx], target)
             else:
                 raise Exception('this should not happen, please report it')
-            print('joint', j_idx, 'delta_target', target, 'controller output',output)
+            #print('joint', j_idx, 'delta_target', target, 'controller output',output)
             self.active_joints[j_idx].set_drive_velocity_target(output)
 
     def simulation_step(self):
@@ -308,7 +308,27 @@ class MagicFloatingAgent(Agent):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
     
-
+        self.finger1_joint, self.finger2_joint = get_actor_by_name(self.robot.get_joints(),
+                                                       ['panda_finger_joint1', 'panda_finger_joint2'])
+        self.grasp_site = get_actor_by_name(self.robot.get_links(), 'grasp_site')
+    def get_ee_coords_sample(self):
+        l = 0.0355
+        r = 0.052
+        ret = []
+        for i in range(10):
+            x = (l * i + (4 - i) * r) / 4
+            finger_tips = [
+                self.finger2_joint
+                    .get_global_pose()
+                    .transform(Pose([0, x, 0]))
+                    .p,
+                self.finger1_joint
+                    .get_global_pose()
+                    .transform(Pose([0, -x, 0]))
+                    .p,
+            ]
+            ret.append(finger_tips)
+        return np.array(ret).transpose((1, 0, 2))
 
     def _get_base_orientation(self):
         # active_joints[2] is root_z_rotation_joint
@@ -363,6 +383,7 @@ class DummyMobileAgent(Agent):
         # coincidently, the action_range does not change
         # generally, we need to rotate some dimensions
         return self._action_range
+    
 
     def _get_base_orientation(self):
         # active_joints[2] is root_z_rotation_joint

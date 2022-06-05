@@ -52,6 +52,16 @@ cabinet_drawer_model_file = _this_file.parent.joinpath("../assets/config_files/c
 # cabinet_drawer_ids = get_model_ids_from_yaml(cabinet_drawer_model_file)
 cabinet_drawer_infos = get_raw_yaml(cabinet_drawer_model_file)
 
+
+for cabinet_id in cabinet_drawer_infos:
+    register(
+        id='OpenCabinetDrawerMagic_{:s}-v0'.format(cabinet_id),
+        entry_point='mani_skill.env.open_cabinet_door_drawer:OpenCabinetDrawerMagicEnv',
+        kwargs={'variant_config': {"partnet_mobility_id": cabinet_id},
+        }
+    )
+
+
 for cabinet_id in cabinet_drawer_infos:
     register(
         id='OpenCabinetDrawer_{:s}-v0'.format(cabinet_id),
