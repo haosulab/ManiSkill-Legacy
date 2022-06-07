@@ -54,7 +54,7 @@ cabinet_drawer_infos = get_raw_yaml(cabinet_drawer_model_file)
 
 
 for cabinet_id in cabinet_drawer_infos:
-    print(cabinet_id,',')
+    #print(cabinet_id,',')
     register(
         id='OpenCabinetDrawerMagic_{:s}-v0'.format(cabinet_id),
         entry_point='mani_skill.env.open_cabinet_door_drawer:OpenCabinetDrawerMagicEnv',
