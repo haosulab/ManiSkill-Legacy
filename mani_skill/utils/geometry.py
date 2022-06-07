@@ -91,6 +91,20 @@ def get_axis_aligned_bbox_for_actor(actor):
 
     return mins, maxs
 
+def get_all_aabb_for_actor(actor):
+    all_mins = []
+    all_maxs = []
+    for shape in actor.get_collision_shapes():
+        scaled_vertices = shape.geometry.vertices * shape.geometry.scale
+        local_pose = shape.get_local_pose()
+        mat = (actor.get_pose() * local_pose).to_transformation_matrix()
+        world_vertices = scaled_vertices @ (mat[:3, :3].T) + mat[:3, 3]
+        all_mins.append(world_vertices.min(0))
+        all_maxs.append(world_vertices.max(0))
+    return all_mins, all_maxs
+
+
+
 def get_local_axis_aligned_bbox_for_link(link):
     mins = np.array([np.inf, np.inf, np.inf])
     maxs = -mins
@@ -102,3 +116,4 @@ def get_local_axis_aligned_bbox_for_link(link):
         mins = np.minimum(mins, vertices.min(0))
         maxs = np.maximum(maxs, vertices.max(0))
     return mins, maxs
+

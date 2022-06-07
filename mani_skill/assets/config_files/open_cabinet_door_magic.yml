@@ -41,7 +41,7 @@ layout:
         type: "options"
         global_id: "partnet_mobility_id"
         options:
-          _include: "cabinet_models_door.yml"
+          _include: "cabinet_models_drawer.yml"
 agent:
   _include: "robots/float_magic_panda.yml"
   # _override:

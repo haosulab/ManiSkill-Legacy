@@ -6,7 +6,7 @@ from sapien.core import Pose, Articulation
 from mani_skill.env.base_env import BaseEnv
 from mani_skill.utils.contrib import apply_pose_to_points, o3d_to_trimesh, trimesh_to_o3d, apply_pose_to_points, normalize_and_clip_in_interval, norm, angle_distance
 from mani_skill.utils.misc import sample_from_tuple_or_scalar
-from mani_skill.utils.geometry import get_axis_aligned_bbox_for_articulation
+from mani_skill.utils.geometry import get_axis_aligned_bbox_for_articulation, get_axis_aligned_bbox_for_actor,get_all_aabb_for_actor
 from mani_skill.utils.o3d_utils import np2mesh, merge_mesh
 import trimesh
 
@@ -377,81 +377,119 @@ class OpenCabinetDrawerEnv(OpenCabinetEnvBase):
 
 
 class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
-        def __init__(self, yaml_file_path=f'../assets/config_files/open_cabinet_door_magic.yml', *args, **kwargs):
-            super().__init__(
-                yaml_file_path=yaml_file_path, *args, **kwargs
-            )
-            self.magic_drive = None
-            self.connected=False
+    def __init__(self, yaml_file_path=f'../assets/config_files/open_cabinet_door_magic.yml', *args, **kwargs):
+        super().__init__(
+            yaml_file_path=yaml_file_path, *args, **kwargs
+        )
+        self.magic_drive = None
+        self.connected=False
+    
+    # def reset(self, *args, **kwargs):
+    #     self.magic_drive = None
+    #     self.connected = False
+    #     return super().reset(*args, **kwargs)
+    def get_obs(self, **kwargs):
+        dense_obs = np.zeros(5+5+1) # robot qpos [5] robot qvel [5] target_link (qpos) [1]
+        robot = self.agent.robot
+        qpos = robot.get_qpos()
+        qvel = robot.get_qvel()
+        dense_obs[:5] = qpos
+        dense_obs[5:10] = qvel
+        dense_obs[10:11] = self.cabinet.get_qpos()[self.target_index_in_active_joints]
+        return dense_obs
+
+    def get_handle_coord(self):
+        handles_info = self.handles_info
+        #pdb.set_trace()
+        handle_pose = handles_info[self.target_link_name][-1][-1]
+        assert type(handle_pose) == Pose
+        coords = handle_pose.p
+        coords2 = apply_pose_to_points(coords, self.cabinet.get_root_pose())
+        return coords2
+
+    def _place_robot(self):
+        #print("placing robot")
+        # self.agent.robot.set_qpos([-0.5,0,0.5,0.04,0.04]) # tmu: confirm this is 0.4 or 0.04, you write 0.4
+        pass
+
+    def _choose_target_link(self):
+        super()._choose_target_link('prismatic')
+
+    @property
+    def num_target_links(self):
+        return super().num_target_links('prismatic')
+
+    def magic_grasp(self):
+        assert self.magic_drive is None
+        assert self.connected is False
+
+        actor1 = self.agent.grasp_site
+        pose1 = Pose(p=[0,0,0], q=[1,0,0,0])
         
-        def reset(self, **kwargs):
-            self.magic_drive = None
+        actor2 = self.target_link
+        # maybe first get handle's world pose and convert it to actor2's frame?
+        #T_w_handle = self.handles_info[self.target_link_name][-1][-1] #world frame
+        # actor 2 is the target link, get target link pose
+        #pose2_mat = T_w_handle.inv().to_transformation_matrix() @ actor_2_frame.to_transformation_matrix()
+        #pose2 = Pose.from_transformation_matrix(pose2_mat)
+        #pose2 = apply_pose_to_points(T_w_handle.p, actor2.get_pose())
+        #pose2 = Pose(p=[0,0,0],q=[1,0,0,0])
+
+        pose2=actor1.pose.inv().to_transformation_matrix() @ actor2.pose.to_transformation_matrix()
+        pose2=Pose.from_transformation_matrix(pose2) 
+
+
+
+
+
+        magic_drive=self._scene.create_drive(actor1, pose1, actor2, pose2)
+        magic_drive.set_x_properties(stiffness=5e4, damping=3e3)
+        magic_drive.set_y_properties(stiffness=5e4, damping=3e3)
+        magic_drive.set_z_properties(stiffness=5e4, damping=3e3)
+        magic_drive.set_slerp_properties(stiffness=5e4, damping=3e3)
+
+        self.connected = True
+        self.magic_drive = magic_drive
+
+    def magic_release(self):
+        if self.connected is True:
             self.connected = False
-            return super().reset(**kwargs)
-        def get_obs(self, **kwargs):
-            dense_obs = np.zeros(5+5+1) # robot qpos [5] robot qvel [5] target_link (qpos) [1]
-            robot = self.agent.robot
-            qpos = robot.get_qpos()
-            qvel = robot.get_qvel()
-            dense_obs[:5] = qpos
-            dense_obs[5:10] = qvel
-            dense_obs[10:11] = self.cabinet.get_qpos()[self.target_index_in_active_joints]
-            return dense_obs
+            self.magic_drive = None
 
-        def get_handle_coord(self):
-            handles_info = self.handles_info
-            #pdb.set_trace()
-            handle_pose = handles_info[self.target_link_name][-1][-1]
-            assert type(handle_pose) == Pose
-            coords = handle_pose.p
-            coords2 = apply_pose_to_points(coords, self.cabinet.get_root_pose())
-            return coords2
+    def get_target_link_bbox(self):
+        mins, maxs = get_axis_aligned_bbox_for_actor(self.target_link)
+        return mins, maxs
+    
 
-        def _place_robot(self):
-            #print("placing robot")
-            # self.agent.robot.set_qpos([-0.5,0,0.5,0.04,0.04]) # tmu: confirm this is 0.4 or 0.04, you write 0.4
-            pass
+    def draw_bboxes(self, mins, maxs, name='bbox'):
+        center = (mins + maxs) / 2 
+        half_size = (maxs - mins) / 2
 
-        def _choose_target_link(self):
-            super()._choose_target_link('prismatic')
+        builder=self._scene.create_actor_builder()
+        builder.add_box_visual(half_size=half_size, color=[1, 0, 0])
+        bbox = builder.build_static(name)
+        bbox.set_pose(Pose(p=center,q=[1,0,0,0]))
 
-        @property
-        def num_target_links(self):
-            return super().num_target_links('prismatic')
+    def remove_drawer(self):
+        self._scene.remove_articulation(self.cabinet)
+        self.cabinet = None
 
-        def magic_grasp(self):
-            assert self.magic_drive is None
-            assert self.connected is False
+    def get_all_minmax(self,link):
+        all_mins, all_maxs = get_all_aabb_for_actor(link)
+        return all_mins, all_maxs
 
-            actor1 = self.agent.grasp_site
-            pose1 = Pose(p=[0,0,0], q=[1,0,0,0])
-            
-            actor2 = self.target_link
-            # maybe first get handle's world pose and convert it to actor2's frame?
-            #T_w_handle = self.handles_info[self.target_link_name][-1][-1] #world frame
-            # actor 2 is the target link, get target link pose
-            #pose2_mat = T_w_handle.inv().to_transformation_matrix() @ actor_2_frame.to_transformation_matrix()
-            #pose2 = Pose.from_transformation_matrix(pose2_mat)
-            #pose2 = apply_pose_to_points(T_w_handle.p, actor2.get_pose())
-            #pose2 = Pose(p=[0,0,0],q=[1,0,0,0])
+    def draw_all_aabb(self, all_mins, all_maxs):
+        assert len(all_mins) == len(all_maxs)
+        for i in range(len(all_mins)):
+            mins = all_mins[i]
+            maxs = all_maxs[i]
+            self.draw_bboxes(mins, maxs, name='bbox'+str(i))
 
-            pose2=actor1.pose.inv().to_transformation_matrix() @ actor2.pose.to_transformation_matrix()
-            pose2=Pose.from_transformation_matrix(pose2) 
+    def get_aabb_for_min_x(self, link): 
+        all_mins, all_maxs = self.get_all_minmax(link)
+        sorted_index = sorted(range(len(all_maxs)),key=lambda i: all_maxs[i][0])
+        max_x_index = sorted_index[0]
+        mins = all_mins[max_x_index]
+        maxs = all_maxs[max_x_index]
 
-
-
-
-
-            magic_drive=self._scene.create_drive(actor1, pose1, actor2, pose2)
-            magic_drive.set_x_properties(stiffness=5e4, damping=3e3)
-            magic_drive.set_y_properties(stiffness=5e4, damping=3e3)
-            magic_drive.set_z_properties(stiffness=5e4, damping=3e3)
-            magic_drive.set_slerp_properties(stiffness=5e4, damping=3e3)
-
-            self.connected = True
-            self.magic_drive = magic_drive
-
-        def magic_release(self):
-            if self.connected is True:
-                self.connected = False
-                self.magic_drive = None
+        return mins, maxs
