@@ -513,8 +513,9 @@ class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
 
     def magic_release(self):
         if self.connected is True:
-            self._scene.remove_drive(self.magic_drive)
             self.connected = False
+           # self._scene.create_drive()
+            self._scene.remove_drive(self.magic_drive)
             self.magic_drive = None
 
     def get_target_link_bbox(self):
