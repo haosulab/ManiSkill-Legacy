@@ -9,6 +9,7 @@ from mani_skill.utils.misc import sample_from_tuple_or_scalar
 from mani_skill.utils.geometry import get_axis_aligned_bbox_for_articulation, get_axis_aligned_bbox_for_actor,get_all_aabb_for_actor
 from mani_skill.utils.o3d_utils import np2mesh, merge_mesh
 import trimesh
+from collections import OrderedDict
 
 import pathlib
 _this_file = pathlib.Path(__file__).resolve()
@@ -43,8 +44,10 @@ class OpenCabinetEnvBase(BaseEnv):
         self._place_cabinet()
         self._close_all_parts()
         self._find_handles_from_articulation()
-        self._place_robot()
         self._choose_target_link()
+        # self._find_handles_from_articulation()
+        self._place_robot()
+        # self._choose_target_link()
         self._ignore_collision()
         self._set_joint_physical_parameters()
         self._prepare_for_obs()
@@ -172,7 +175,7 @@ class OpenCabinetEnvBase(BaseEnv):
 
         # base orientation
         perturb_orientation = self._level_rng.uniform(low=-0.05*np.pi, high=0.05*np.pi)
-        base_theta = -np.pi + theta + perturb_orientation
+        base_theta = 0 #-np.pi + theta + perturb_orientation
 
         self.agent.set_state({
             'base_pos': base_pos,
@@ -375,7 +378,35 @@ class OpenCabinetDrawerEnv(OpenCabinetEnvBase):
     def num_target_links(self):
         return super().num_target_links('prismatic')
 
+    def get_obs(self, **kwargs):
+        # warning, overwrite original get_obs
+        s = 13 + 13 + 7 + 6  # qpos [13] qvel [13] hand(xyz,q) [7] bbox [6]
+        dense_obs = np.zeros(s)
+        qpos = self.agent.robot.get_qpos()
+        qvel = self.agent.robot.get_qvel()
+        hand = self.agent.hand
+        hand_p, hand_q = hand.pose.p, hand.pose.q
+        mins, maxs = self.get_aabb_for_min_x(self.target_link)
+        dense_obs[:13] = qpos
+        dense_obs[13:26] = qvel
+        dense_obs[26:29] = hand_p
+        dense_obs[29:33] = hand_q
+        dense_obs[33:36] = mins
+        dense_obs[36:39] = maxs
+        return dense_obs
 
+    def get_aabb_for_min_x(self, link): 
+        all_mins, all_maxs = self.get_all_minmax(link)
+        sorted_index = sorted(range(len(all_maxs)),key=lambda i: all_maxs[i][0])
+        max_x_index = sorted_index[0]
+        mins = all_mins[max_x_index]
+        maxs = all_maxs[max_x_index]
+
+        return mins, maxs
+        
+    def get_all_minmax(self,link):
+        all_mins, all_maxs = get_all_aabb_for_actor(link)
+        return all_mins, all_maxs
 class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
     def __init__(self, yaml_file_path=f'../assets/config_files/open_cabinet_door_magic.yml', *args, **kwargs):
         super().__init__(
@@ -388,15 +419,39 @@ class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
     #     self.magic_drive = None
     #     self.connected = False
     #     return super().reset(*args, **kwargs)
+    # def get_obs(self, **kwargs):
+    #     dense_obs = np.zeros(5+5+1) # robot qpos [5] robot qvel [5] target_link (qpos) [1]
+    #     robot = self.agent.robot
+    #     qpos = robot.get_qpos()
+    #     qvel = robot.get_qvel()
+    #     dense_obs[:5] = qpos
+    #     dense_obs[5:10] = qvel
+    #     dense_obs[10:11] = self.cabinet.get_qpos()[self.target_index_in_active_joints]
+    #     return dense_obs
+
+    # def get_custom_observation(self):
     def get_obs(self, **kwargs):
-        dense_obs = np.zeros(5+5+1) # robot qpos [5] robot qvel [5] target_link (qpos) [1]
+        dense_obs = np.zeros(5+5+6) #qpos[5] qvel[5] bbox[6]
         robot = self.agent.robot
         qpos = robot.get_qpos()
         qvel = robot.get_qvel()
+        mins, maxs = self.get_aabb_for_min_x(self.target_link)
         dense_obs[:5] = qpos
         dense_obs[5:10] = qvel
-        dense_obs[10:11] = self.cabinet.get_qpos()[self.target_index_in_active_joints]
+        dense_obs[10:13] = mins
+        dense_obs[13:16] = maxs
         return dense_obs
+
+        # agent_state = self.agent.get_state()
+        # mins, maxs = self.get_aabb_for_min_x()
+        # drawer_info = OrderedDict(mins=mins, max=maxs)
+        # obs = OrderedDict(
+        #     agent=agent_state,
+        #     drawer=drawer_info,
+        # )
+        # return obs
+
+
 
     def get_handle_coord(self):
         handles_info = self.handles_info
@@ -410,6 +465,7 @@ class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
     def _place_robot(self):
         #print("placing robot")
         # self.agent.robot.set_qpos([-0.5,0,0.5,0.04,0.04]) # tmu: confirm this is 0.4 or 0.04, you write 0.4
+        ## dummy call using level_rng? NO
         pass
 
     def _choose_target_link(self):
@@ -419,6 +475,10 @@ class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
     def num_target_links(self):
         return super().num_target_links('prismatic')
 
+    @property
+    def viewer(self):
+        return self._viewer
+        
     def magic_grasp(self):
         assert self.magic_drive is None
         assert self.connected is False
@@ -453,6 +513,7 @@ class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
 
     def magic_release(self):
         if self.connected is True:
+            self._scene.remove_drive(self.magic_drive)
             self.connected = False
             self.magic_drive = None
 

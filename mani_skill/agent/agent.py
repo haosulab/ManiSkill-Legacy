@@ -257,6 +257,8 @@ class Agent:
     
     def set_state(self, state, by_dict=False):
         if not by_dict:
+            print(len(state))
+            print(self.full_state_len)
             assert len(state) == self.full_state_len,\
                 'length of state is not correct, probably because controller states are missing'
             state = state[self.num_ee*12:] # remove fingers_pos and fingers_vel
@@ -311,6 +313,8 @@ class MagicFloatingAgent(Agent):
         self.finger1_joint, self.finger2_joint = get_actor_by_name(self.robot.get_joints(),
                                                        ['panda_finger_joint1', 'panda_finger_joint2'])
         self.grasp_site = get_actor_by_name(self.robot.get_links(), 'grasp_site')
+        self.full_state_len = len(self.get_state(by_dict=False, with_controller_state=True))
+        self.num_ee = 1
     def get_ee_coords_sample(self):
         l = 0.0355
         r = 0.052
@@ -344,29 +348,45 @@ class MagicFloatingAgent(Agent):
     def get_base_link(self):
         pass
 
-    def get_state(self, **kwargs) -> Dict:
-        state = OrderedDict()
+    def get_ee_coords(self):
+        finger_tips = [
+            self.finger2_joint
+                .get_global_pose()
+                .transform(Pose([0, 0.035, 0]))
+                .p,
+            self.finger1_joint
+                .get_global_pose()
+                .transform(Pose([0, -0.035, 0]))
+                .p,
+        ]
+        return np.array(finger_tips)
 
-        # robot state
-        root_link = self.robot.get_links()[0]
-        state["robot_root_pose"] = root_link.get_pose()
-        state["robot_root_vel"] = root_link.get_velocity()
-        state["robot_root_qvel"] = root_link.get_angular_velocity()
-        state["robot_qpos"] = self.robot.get_qpos()
-        state["robot_qvel"] = self.robot.get_qvel()
-        state["robot_qacc"] = self.robot.get_qacc()
+    def get_ee_vels(self):
+        return np.zeros(6)
+
+    # def get_state(self, **kwargs) -> Dict:
+    #     state = OrderedDict()
+
+    #     # robot state
+    #     root_link = self.robot.get_links()[0]
+    #     state["robot_root_pose"] = root_link.get_pose()
+    #     state["robot_root_vel"] = root_link.get_velocity()
+    #     state["robot_root_qvel"] = root_link.get_angular_velocity()
+    #     state["robot_qpos"] = self.robot.get_qpos()
+    #     state["robot_qvel"] = self.robot.get_qvel()
+    #     state["robot_qacc"] = self.robot.get_qacc()
 
 
-        return state
+    #     return state
 
-    def set_state(self, state: Dict, **kwargs):
-        # robot state
-        self.robot.set_root_pose(state["robot_root_pose"])
-        self.robot.set_root_velocity(state["robot_root_vel"])
-        self.robot.set_root_angular_velocity(state["robot_root_qvel"])
-        self.robot.set_qpos(state["robot_qpos"])
-        self.robot.set_qvel(state["robot_qvel"])
-        self.robot.set_qacc(state["robot_qacc"])
+    # def set_state(self, state: Dict, **kwargs):
+    #     # robot state
+    #     self.robot.set_root_pose(state["robot_root_pose"])
+    #     self.robot.set_root_velocity(state["robot_root_vel"])
+    #     self.robot.set_root_angular_velocity(state["robot_root_qvel"])
+    #     self.robot.set_qpos(state["robot_qpos"])
+    #     self.robot.set_qvel(state["robot_qvel"])
+    #     self.robot.set_qacc(state["robot_qacc"])
     
 
 
