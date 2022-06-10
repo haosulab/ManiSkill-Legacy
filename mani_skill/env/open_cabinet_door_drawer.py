@@ -407,6 +407,99 @@ class OpenCabinetDrawerEnv(OpenCabinetEnvBase):
     def get_all_minmax(self,link):
         all_mins, all_maxs = get_all_aabb_for_actor(link)
         return all_mins, all_maxs
+
+import sapien.core as sapien
+from copy import deepcopy
+from mani_skill.utils.config_parser import (
+    process_variables,
+    process_variants,
+)
+
+class OpenCabinetDrawerEnv_CabinetSelection(OpenCabinetDrawerEnv):
+    def reset(self, level=None, cabinet_id=None, target_link_id=None, *args, **kwargs):
+        if level is None:
+            level = self._main_rng.randint(2 ** 32)
+        self.level = level
+        self._level_rng = np.random.RandomState(seed=self.level)
+
+        # recreate scene
+        scene_config = sapien.SceneConfig()
+        for p, v in self.yaml_config['physics'].items():
+            if p != 'simulation_frequency':
+                setattr(scene_config, p, v)
+        self._scene = self._engine.create_scene(scene_config)
+        self._scene.set_timestep(self.timestep)
+
+        config = deepcopy(self.yaml_config)
+        config = process_variables(config, self._level_rng)
+        self.all_model_ids = list(config['layout']['articulations'][0]['_variants']['options'].keys())
+        self.id_to_parameters = deepcopy(config['layout']['articulations'][0]['_variants']['options'])
+        self.level_config, self.level_variant_config = process_variants(
+            config, self._level_rng, self.variant_config
+        )
+        if cabinet_id is not None:
+            for k,v in self.id_to_parameters[str(cabinet_id)].items():
+                self.level_config['layout']['articulations'][0][k] = v
+
+        # load everything
+        self._setup_renderer()
+        self._setup_physical_materials()
+        self._setup_render_materials()
+        self._load_actors()
+        self._load_articulations()
+        self._setup_objects()
+        self._load_agent()
+        self._load_custom()
+        self._setup_cameras()
+        if self._viewer is not None:
+            self._setup_viewer()
+
+        self._init_eval_record()
+        self.step_in_ep = 0
+
+
+
+        self.cabinet: Articulation = self.articulations['cabinet']['articulation']
+
+        self._place_cabinet()
+        self._close_all_parts()
+        self._find_handles_from_articulation()
+
+        links, joints = [], []
+        for link, joint in zip(self.cabinet.get_links(), self.cabinet.get_joints()):
+            if joint.type == 'prismatic' and link.get_name() in self.handles_info:
+                links.append(link)
+                joints.append(joint)
+
+        if self.fixed_target_link_id is not None:
+            self.target_index = self.fixed_target_link_id % len(joints)
+        else:
+            self.target_index = self._level_rng.choice(len(joints)) # only sample revolute/prismatic joints
+            # the above line will change leve_rng's internal state multiple times
+        if target_link_id is not None:
+            self.target_index = target_link_id % len(joints)
+        self.target_link = links[self.target_index]
+        self.target_link_name = self.target_link.get_name()
+        self.target_joint = joints[self.target_index]
+        self.target_index_in_active_joints = self.cabinet.get_active_joints().index(self.target_joint)
+        self.target_indicator = np.zeros(self.cabinet_max_dof)
+        self.target_indicator[self.target_index_in_active_joints] = 1
+
+        # self._find_handles_from_articulation()
+        self._place_robot()
+        # self._choose_target_link()
+        self._ignore_collision()
+        self._set_joint_physical_parameters()
+        self._prepare_for_obs()
+        
+        [[lmin, lmax]] = self.target_joint.get_limits()
+
+        self.target_qpos = lmin + (lmax - lmin) * self.custom['open_extent']
+        self.pose_at_joint_zero = self.target_link.get_pose()
+
+        return self.get_obs()
+
+
 class OpenCabinetDrawerMagicEnv(OpenCabinetEnvBase):
     def __init__(self, yaml_file_path=f'../assets/config_files/open_cabinet_door_magic.yml', *args, **kwargs):
         super().__init__(
